@@ -30,7 +30,7 @@ import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
  * ...
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- *
+ * Player is responsible for holding information about the individual players
  */
 public class Player extends Subject {
 
