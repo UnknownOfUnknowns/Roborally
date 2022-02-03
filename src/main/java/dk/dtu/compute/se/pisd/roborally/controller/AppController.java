@@ -44,7 +44,7 @@ import java.util.Optional;
  * ...
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- *
+ * This package is responsible for coordination of loading, saving and new games.
  */
 public class AppController implements Observer {
 

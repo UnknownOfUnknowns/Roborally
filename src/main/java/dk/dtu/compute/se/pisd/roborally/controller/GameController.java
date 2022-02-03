@@ -53,10 +53,23 @@ public class GameController {
         //   - the counter of moves in the game should be increased by one
         //     if and when the player is moved (the counter and the status line
         //     message needs to be implemented at another place)
-
+        if(board.getSpace(space.x, space.y).getPlayer() == null){
+            Player currentPlayer = board.getCurrentPlayer();
+            currentPlayer.setSpace(space);
+            if(board.getPlayerNumber(currentPlayer) == board.getPlayersNumber()-1){
+                board.setCurrentPlayer(board.getPlayer(0));
+            }else{
+                Player newPlayer = board.getPlayer(board.getPlayerNumber(currentPlayer)+1);
+                board.setCurrentPlayer(newPlayer);
+            }
+            board.setCounter(board.getCounter()+1);
+        }
     }
 
     // XXX: V2
+    /**
+     * Starts the programming phase of the robot and passes it to the Domain layer
+     * */
     public void startProgrammingPhase() {
         board.setPhase(Phase.PROGRAMMING);
         board.setCurrentPlayer(board.getPlayer(0));

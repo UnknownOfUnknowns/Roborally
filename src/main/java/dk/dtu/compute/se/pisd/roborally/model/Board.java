@@ -55,6 +55,8 @@ public class Board extends Subject {
 
     private int step = 0;
 
+    private int counter = 0;
+
     private boolean stepMode;
 
     public Board(int width, int height, @NotNull String boardName) {
@@ -200,6 +202,17 @@ public class Board extends Subject {
         return getSpace(x, y);
     }
 
+    public int getCounter() {
+        return counter;
+    }
+
+    public void setCounter(int counter) {
+        if (this.counter != counter){
+            this.counter = counter;
+        notifyChange();
+        }
+    }
+
     public String getStatusMessage() {
         // this is actually a view aspect, but for making assignment V1 easy for
         // the students, this method gives a string representation of the current
@@ -208,7 +221,8 @@ public class Board extends Subject {
         // XXX: V1 add the move count to the status message
         // XXX: V2 changed the status so that it shows the phase, the current player and the number of steps
         return "Phase: " + getPhase().name() +
-                ", Player = " + getCurrentPlayer().getName();
+                ", Player = " + getCurrentPlayer().getName() +
+                ", Moves = " + getCounter();
     }
 
 
