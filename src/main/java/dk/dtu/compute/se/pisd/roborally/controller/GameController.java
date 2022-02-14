@@ -44,24 +44,25 @@ public class GameController {
      *
      * @param space the space to which the current player should move
      */
-    public void moveCurrentPlayerToSpace(@NotNull Space space)  {
-        if(space.getPlayer() == null){
+    public void moveCurrentPlayerToSpace(@NotNull Space space) {
+        if (space.getPlayer() == null) {
             Player currentPlayer = board.getCurrentPlayer();
             currentPlayer.setSpace(space);
-            if(board.getPlayerNumber(currentPlayer) == board.getPlayersNumber()-1){
+            if (board.getPlayerNumber(currentPlayer) == board.getPlayersNumber() - 1) {
                 board.setCurrentPlayer(board.getPlayer(0));
-            }else{
-                Player newPlayer = board.getPlayer(board.getPlayerNumber(currentPlayer)+1);
+            } else {
+                Player newPlayer = board.getPlayer(board.getPlayerNumber(currentPlayer) + 1);
                 board.setCurrentPlayer(newPlayer);
             }
-            board.setCounter(board.getCounter()+1);
+            board.setCounter(board.getCounter() + 1);
         }
     }
 
     // XXX: V2
+
     /**
      * Starts the programming phase of the robot and passes it to the Domain layer
-     * */
+     */
     public void startProgrammingPhase() {
         board.setPhase(Phase.PROGRAMMING);
         board.setCurrentPlayer(board.getPlayer(0));
@@ -203,22 +204,45 @@ public class GameController {
 
     // TODO Assignment V2
     public void moveForward(@NotNull Player player) {
-
+        if (board != null && player != null && player.board == board) {
+            Space currentSpace = player.getSpace();
+            if (currentSpace != null) {
+                Space newSpace = board.getNeighbour(currentSpace, player.getHeading());
+                if (newSpace != null && newSpace.getPlayer() == null) {
+                    player.setSpace(newSpace);
+                }
+            }
+        }
     }
 
     // TODO Assignment V2
     public void fastForward(@NotNull Player player) {
-
+        for (int i = 0; i < 3; i++)
+            moveForward(player);
     }
 
     // TODO Assignment V2
     public void turnRight(@NotNull Player player) {
-
+        if(board!=null && player!=null && player.board==board){
+            Heading currentHeading = player.getHeading();
+            if(currentHeading!=null){
+                Heading newHeading= currentHeading.next();
+                if(newHeading!=null){
+                    player.setHeading(newHeading);}
+            }
+        }
     }
 
     // TODO Assignment V2
     public void turnLeft(@NotNull Player player) {
-
+        if(board!=null && player!=null && player.board==board){
+            Heading currentHeading = player.getHeading();
+            if(currentHeading!=null){
+                Heading newHeading= currentHeading.prev();
+                if(newHeading!=null){
+                    player.setHeading(newHeading);}
+            }
+        }
     }
 
     public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
