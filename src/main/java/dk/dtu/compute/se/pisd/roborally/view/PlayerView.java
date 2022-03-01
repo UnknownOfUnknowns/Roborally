@@ -159,7 +159,12 @@ public class PlayerView extends Tab implements ViewObserver {
                     }
                 }
             }
-
+/* here we define the view of the game.
+if the programming phase is not yet active, the active view will be that of the different cards (in the bundle)
+if the programming phase is active, the view will be the default background for this phase.
+Once we are done with the programming phase, we change the background again. If we aren't on any of these phases, we use
+the default background for the programming phase.
+ */
             if (player.board.getPhase() != Phase.PLAYER_INTERACTION) {
                 if (!programPane.getChildren().contains(buttonPanel)) {
                     programPane.getChildren().remove(playerInteractionPanel);
