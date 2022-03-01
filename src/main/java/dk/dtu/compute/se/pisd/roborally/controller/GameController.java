@@ -150,6 +150,10 @@ public class GameController {
             if (step >= 0 && step < Player.NO_REGISTERS) {
                 CommandCard card = currentPlayer.getProgramField(step).getCard();
                 if (card != null) {
+                    if(card.getName().equals("Left OR Right")){
+                        board.setPhase(Phase.PLAYER_INTERACTION);
+                        return;
+                    }
                     Command command = card.command;
                     executeCommand(currentPlayer, command);
                 }
@@ -243,6 +247,32 @@ public class GameController {
                     player.setHeading(newHeading);}
             }
         }
+    }
+
+    public void executeCommandOptionAndContinue(Command option){
+        Player currentPlayer = board.getCurrentPlayer();
+        int step = board.getStep();
+        if(currentPlayer != null) {
+            if (option != null)
+                executeCommand(currentPlayer, option);
+            board.setPhase(Phase.ACTIVATION);
+
+            int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
+            if (nextPlayerNumber < board.getPlayersNumber()) {
+                board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
+            } else {
+                step++;
+                if (step < Player.NO_REGISTERS) {
+                    makeProgramFieldsVisible(step);
+                    board.setStep(step);
+                    board.setCurrentPlayer(board.getPlayer(0));
+                } else {
+                    startProgrammingPhase();
+                }
+            }
+        }
+        if(!board.isStepMode())
+            continuePrograms();
     }
 
     public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
