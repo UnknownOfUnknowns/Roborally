@@ -43,6 +43,9 @@ public enum Command {
     // XXX Assignment V3
     OPTION_LEFT_RIGHT("Left OR Right", LEFT, RIGHT);
 
+    /* this option is created for interactive card.
+    Two options will be displayed and the player can choose between moving left or right*/
+
     final public String displayName;
 
     // XXX Assignment V3
@@ -62,9 +65,10 @@ public enum Command {
     public boolean isInteractive() {
         return !options.isEmpty();
     }
+/* checks whether the card is interactive (decides if above coded option is to be displayed or not */
 
     public List<Command> getOptions() {
         return options;
     }
-
+/*options coded above are returned*/
 }
