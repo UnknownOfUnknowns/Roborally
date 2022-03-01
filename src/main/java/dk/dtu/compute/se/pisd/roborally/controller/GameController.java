@@ -157,6 +157,10 @@ public class GameController {
                     Command command = card.command;
                     executeCommand(currentPlayer, command);
                 }
+                  /* if the activation phase is active, the steps of the players are executed.
+                    Once an interactive card is hit, we display the options, and then continue.
+
+                */
                 int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
                 if (nextPlayerNumber < board.getPlayersNumber()) {
                     board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
@@ -169,6 +173,11 @@ public class GameController {
                     } else {
                         startProgrammingPhase();
                     }
+                    /* we repeat for every player in order of turn, and once the activation phase for
+                    every player has been executed, we return to the programming phase
+
+
+                     */
                 }
             } else {
                 // this should not happen
@@ -274,6 +283,11 @@ public class GameController {
         if(!board.isStepMode())
             continuePrograms();
     }
+    /* we set the activation phase for each player, in order, i.e we get and execute their
+    respective commands. When the last player number
+    is reached, we also assure that it is not the turn of the player #1. When the activation phase for all
+    players is set, we activate the programming phase.
+     */
 
     public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
         CommandCard sourceCard = source.getCard();
