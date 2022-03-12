@@ -215,14 +215,33 @@ public class GameController {
         }
     }
 
+    private void moveToSpace(@NotNull Player player,
+                             @NotNull Space space,
+                             @NotNull Heading heading) throws ImpossibleMoveException{
+        Player playerOnSpace = space.getPlayer();
+        if(playerOnSpace != null){
+            Space nextSpace = board.getNeighbour(space, heading);
+            if(nextSpace != null){
+                moveToSpace(playerOnSpace, nextSpace, heading);
+            }else{
+                throw new ImpossibleMoveException(player, space, heading);
+            }
+        }
+        player.setSpace(space);
+    }
+
     // TODO Assignment V2
     public void moveForward(@NotNull Player player) {
         if (board != null && player != null && player.board == board) {
             Space currentSpace = player.getSpace();
             if (currentSpace != null) {
                 Space newSpace = board.getNeighbour(currentSpace, player.getHeading());
-                if (newSpace != null && newSpace.getPlayer() == null) {
-                    player.setSpace(newSpace);
+                if (newSpace != null) {
+                    try {
+                        moveToSpace(player, newSpace, player.getHeading());
+                    } catch (ImpossibleMoveException e){
+
+                    }
                 }
             }
         }

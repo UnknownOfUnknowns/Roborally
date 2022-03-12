@@ -1,9 +1,6 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
-import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Heading;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
-import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -107,4 +104,21 @@ class GameControllerTest {
         Assertions.assertEquals(Heading.EAST, current.getHeading(), "Player 0 should be heading SOUTH!");
     }
 
+    @Test
+    void pushRobots(){
+        Board board = gameController.board;
+        board.getPlayer(1).setSpace(board.getSpace(0,1));
+        board.getPlayer(2).setSpace(board.getSpace(0,2));
+        Player current = board.getCurrentPlayer();
+        gameController.moveForward(current);
+        Assertions.assertEquals(current, board.getSpace(0, 1).getPlayer(), "Player " + current.getName() + " should beSpace (0,1)!");
+        Assertions.assertEquals(board.getPlayer(1), board.getSpace(0, 2).getPlayer(), "Player " + current.getName() + " should beSpace (0,2)!");
+        Assertions.assertEquals(board.getPlayer(2), board.getSpace(0, 3).getPlayer(), "Player " + current.getName() + " should beSpace (0,3)!");
+    }
+
+
+    @Test
+    void pushRobotsImpossibleMove(){
+
+    }
 }
