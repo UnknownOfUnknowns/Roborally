@@ -25,15 +25,17 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.model.TurnDirection;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.BoardElement;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.Gear;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -68,7 +70,7 @@ public class SpaceView extends StackPane implements ViewObserver {
             this.setStyle("-fx-background-color: black;");
         }
 
-        // updatePlayer();
+        updatePlayer();
 
         // This space view should listen to changes of the space
         space.attach(this);
@@ -76,7 +78,6 @@ public class SpaceView extends StackPane implements ViewObserver {
     }
 
     private void updatePlayer() {
-        this.getChildren().clear();
 
         Player player = space.getPlayer();
         if (player != null) {
@@ -96,9 +97,17 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     @Override
     public void updateView(Subject subject) {
+        this.getChildren().clear();
+        renderWalls();
+        if(space.getBoardElement() != null)
+            renderBoardElement();
+
         if (subject == this.space) {
             updatePlayer();
         }
+    }
+
+    private void renderWalls(){
         if(space.getWalls() != null) {
             for (Heading heading : space.getWalls()) {
                 Pane pane = new Pane();
@@ -142,6 +151,28 @@ public class SpaceView extends StackPane implements ViewObserver {
                 pane.getChildren().add(line);
                 this.getChildren().add(pane);
             }
+        }
+    }
+
+    private void renderBoardElement(){
+        Pane pane = new Pane();
+        Rectangle rectangle =
+                new Rectangle(0.0, 0.0, SPACE_WIDTH, SPACE_HEIGHT);
+        rectangle.setFill(Color.TRANSPARENT);
+        pane.getChildren().add(rectangle);
+        BoardElement element = space.getBoardElement();
+
+        if(element.getClass() == Gear.class){
+            Gear concreteElement = (Gear) element;
+            Circle circle = new Circle(10);
+            if(concreteElement.getTurnDirection().equals(TurnDirection.LEFT))
+                circle.setFill(Paint.valueOf("red"));
+            else
+                circle.setFill(Paint.valueOf("green"));
+            circle.setCenterX(SPACE_WIDTH/2.0);
+            circle.setCenterY(SPACE_HEIGHT/2.0);
+            pane.getChildren().add(circle);
+            this.getChildren().add(pane);
         }
     }
 }

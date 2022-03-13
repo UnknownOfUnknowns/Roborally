@@ -22,7 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
 import dk.dtu.compute.se.pisd.roborally.model.*;
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.Wall;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.BoardElement;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -157,6 +157,9 @@ public class GameController {
                     }
                     Command command = card.command;
                     executeCommand(currentPlayer, command);
+                    BoardElement element = currentPlayer.getSpace().getBoardElement();
+                    if(element != null)
+                        element.interact(currentPlayer);
                 }
                   /* if the activation phase is active, the steps of the players are executed.
                     Once an interactive card is hit, we display the options, and then continue.

@@ -23,7 +23,6 @@ package dk.dtu.compute.se.pisd.roborally.model;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.BoardElement;
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.Wall;
 
 import java.util.ArrayList;
 
@@ -51,7 +50,13 @@ public class Space extends Subject {
         this.y = y;
         player = null;
     }
-
+    public Space(Board board, BoardElement boardElement, int x, int y) {
+        this.board = board;
+        this.x = x;
+        this.y = y;
+        this.boardElement = boardElement;
+        player = null;
+    }
     public Player getPlayer() {
         return player;
     }
@@ -89,5 +94,9 @@ public class Space extends Subject {
 
     public BoardElement getBoardElement() {
         return boardElement;
+    }
+
+    public void setBoardElement(BoardElement boardElement) {
+        this.boardElement = boardElement;
     }
 }
