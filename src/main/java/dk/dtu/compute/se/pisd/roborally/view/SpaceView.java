@@ -22,12 +22,11 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
-import dk.dtu.compute.se.pisd.roborally.model.Heading;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
-import dk.dtu.compute.se.pisd.roborally.model.Space;
-import dk.dtu.compute.se.pisd.roborally.model.TurnDirection;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.BoardElement;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.Gear;
+import dk.dtu.compute.se.pisd.roborally.view.components.Arrow;
+import dk.dtu.compute.se.pisd.roborally.view.components.ConveyerBelt;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -105,6 +104,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         if (subject == this.space) {
             updatePlayer();
         }
+
     }
 
     private void renderWalls(){
@@ -166,13 +166,23 @@ public class SpaceView extends StackPane implements ViewObserver {
             Gear concreteElement = (Gear) element;
             Circle circle = new Circle(10);
             if(concreteElement.getTurnDirection().equals(TurnDirection.LEFT))
-                circle.setFill(Paint.valueOf("red"));
+                circle.setFill(Color.DARKRED);
             else
                 circle.setFill(Paint.valueOf("green"));
             circle.setCenterX(SPACE_WIDTH/2.0);
             circle.setCenterY(SPACE_HEIGHT/2.0);
             pane.getChildren().add(circle);
             this.getChildren().add(pane);
+        }else if(element.getClass() == dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyerBelt.class){
+            dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyerBelt concreteElement =
+                    (dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyerBelt) element;
+            ConveyerBelt belt = new ConveyerBelt(SPACE_WIDTH, SPACE_HEIGHT);
+            switch (concreteElement.getDirection()){
+                case SOUTH -> belt.setRotate(90);
+                case WEST -> belt.setRotate(180);
+                case NORTH -> setRotate(-90);
+            }
+            getChildren().add(belt);
         }
     }
 }
