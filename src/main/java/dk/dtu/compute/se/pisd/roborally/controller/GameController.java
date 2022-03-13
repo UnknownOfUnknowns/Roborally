@@ -22,6 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
 import dk.dtu.compute.se.pisd.roborally.model.*;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.Wall;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -227,6 +228,18 @@ public class GameController {
                 throw new ImpossibleMoveException(player, space, heading);
             }
         }
+        if(space.getWalls() != null) {
+            for (Heading head : space.getWalls()) {
+                if (board.getNeighbour(space, head).equals(player.getSpace()))
+                    throw new ImpossibleMoveException(player, space, heading);
+            }
+        }
+        if(player.getSpace().getWalls() != null) {
+            for (Heading head : player.getSpace().getWalls()) {
+                if (board.getNeighbour(player.getSpace(), head).equals(space))
+                    throw new ImpossibleMoveException(player, space, heading);
+            }
+        }
         player.setSpace(space);
     }
 
@@ -240,7 +253,7 @@ public class GameController {
                     try {
                         moveToSpace(player, newSpace, player.getHeading());
                     } catch (ImpossibleMoveException e){
-
+                        System.out.println("ERR");
                     }
                 }
             }

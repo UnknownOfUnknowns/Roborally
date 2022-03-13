@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+
 class GameControllerTest {
 
     private final int TEST_WIDTH = 8;
@@ -119,6 +121,14 @@ class GameControllerTest {
 
     @Test
     void pushRobotsImpossibleMove(){
+        Board board = gameController.board;
+        board.getPlayer(1).setSpace(board.getSpace(0,1));
+        ArrayList<Heading> walls = new ArrayList<>();
+        walls.add(Heading.NORTH);
+        board.getSpace(0,2).setWalls(walls);
+        Player current = board.getCurrentPlayer();
+        Assertions.assertEquals(current, board.getSpace(0, 0).getPlayer(), "Player " + current.getName() + " should beSpace (0,0)!");
+        Assertions.assertEquals(board.getPlayer(1), board.getSpace(0, 1).getPlayer(), "Player " + current.getName() + " should beSpace (0,1)!");
 
     }
 }
