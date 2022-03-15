@@ -213,6 +213,16 @@ public class GameController {
                 case FAST_FORWARD:
                     this.fastForward(player);
                     break;
+                    // XXX Assignment A3
+                case MOVE_TWO:
+                    this.moveForward(player);
+                    this.moveForward(player);
+                case U_TURN:
+                    this.turnLeft(player);
+                    this.turnLeft(player);
+                case BACK_UP:
+                    this.moveBackward(player);
+                case AGAIN:
                 default:
                     // DO NOTHING (for now)
             }
@@ -261,6 +271,18 @@ public class GameController {
                 }
             }
         }
+    }
+    // XXX Assignment A3
+    public void moveBackward(@NotNull Player player){
+      this.turnLeft(player);
+      this.turnLeft(player);
+      moveForward(player);
+      this.turnLeft(player);
+      this.turnLeft(player);
+    }
+    // XXX Assignment A3
+    public void again(@NotNull Player player){
+
     }
 
     // TODO Assignment V2
