@@ -21,6 +21,7 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
+import com.sun.javafx.sg.prism.NGRectangle;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.BoardElement;
 import org.jetbrains.annotations.NotNull;
@@ -217,11 +218,14 @@ public class GameController {
                 case MOVE_TWO:
                     this.moveForward(player);
                     this.moveForward(player);
+                    break;
                 case U_TURN:
                     this.turnLeft(player);
                     this.turnLeft(player);
+                    break;
                 case BACK_UP:
                     this.moveBackward(player);
+                    break;
                 case AGAIN:
                 default:
                     // DO NOTHING (for now)

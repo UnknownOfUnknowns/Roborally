@@ -97,9 +97,10 @@ public class SpaceView extends StackPane implements ViewObserver {
     @Override
     public void updateView(Subject subject) {
         this.getChildren().clear();
-        renderWalls();
         if(space.getBoardElement() != null)
             renderBoardElement();
+
+        renderWalls();
 
         if (subject == this.space) {
             updatePlayer();
