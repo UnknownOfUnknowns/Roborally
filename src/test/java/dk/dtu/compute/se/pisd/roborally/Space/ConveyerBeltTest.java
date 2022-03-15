@@ -2,12 +2,13 @@ package dk.dtu.compute.se.pisd.roborally.Space;
 
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.*;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyerBelt;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.Gear;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class GearTest {
+public class ConveyerBeltTest {
     private final int TEST_WIDTH = 8;
     private final int TEST_HEIGHT = 8;
 
@@ -24,16 +25,18 @@ public class GearTest {
             player.setHeading(Heading.values()[i % Heading.values().length]);
         }
         board.setCurrentPlayer(board.getPlayer(0));
-        board.getSpace(0,1).setBoardElement(new Gear(TurnDirection.RIGHT));
+        board.getSpace(0,1).setBoardElement(new ConveyerBelt(board.getSpace(0,1), Heading.SOUTH));
     }
 
     @Test
-    void turnWhenLandedOn(){
+    void useConveyerBelt(){
         Board board = gameController.board;
         board.setPhase(Phase.ACTIVATION);
         Player current = board.getCurrentPlayer();
         current.getProgramField(0).setCard(new CommandCard(Command.FORWARD));
         gameController.executePrograms();
-        Assertions.assertEquals(Heading.WEST, current.getHeading(), "Should be facing west");
+        Assertions.assertEquals(current.getSpace(), board.getSpace(0,2), "The player should be on the space following the ConveyerBelt");
     }
+
+
 }
