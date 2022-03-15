@@ -31,6 +31,7 @@ import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
 import dk.dtu.compute.se.pisd.roborally.model.TurnDirection;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.Checkpoint;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyerBelt;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.Gear;
 import javafx.application.Platform;
@@ -91,6 +92,7 @@ public class AppController implements Observer {
 
             board.getSpace(3,3).setBoardElement(new ConveyerBelt(board.getSpace(3,3), Heading.NORTH));
             board.getSpace(3,2).setBoardElement(new Gear(TurnDirection.LEFT));
+            board.getSpace(4,4).setBoardElement(new Checkpoint(1));
             // XXX: V2
             board.setCurrentPlayer(board.getPlayer(0));
             gameController.startProgrammingPhase();

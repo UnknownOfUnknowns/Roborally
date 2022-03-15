@@ -24,6 +24,7 @@ package dk.dtu.compute.se.pisd.roborally.view;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.BoardElement;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.Checkpoint;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.Gear;
 import dk.dtu.compute.se.pisd.roborally.view.components.Arrow;
 import dk.dtu.compute.se.pisd.roborally.view.components.ConveyerBelt;
@@ -35,6 +36,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.*;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextBoundsType;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -156,7 +159,7 @@ public class SpaceView extends StackPane implements ViewObserver {
     }
 
     private void renderBoardElement(){
-        Pane pane = new Pane();
+        Pane pane = new StackPane();
         Rectangle rectangle =
                 new Rectangle(0.0, 0.0, SPACE_WIDTH, SPACE_HEIGHT);
         rectangle.setFill(Color.TRANSPARENT);
@@ -184,6 +187,16 @@ public class SpaceView extends StackPane implements ViewObserver {
                 case NORTH -> setRotate(-90);
             }
             getChildren().add(belt);
+        } else if(element.getClass() == Checkpoint.class){
+            Checkpoint checkpoint = (Checkpoint) element;
+            Circle circle = new Circle(10);
+            circle.setFill(Color.YELLOW);
+            Text number = new Text(String.valueOf(checkpoint.getNumber()));
+            number.setBoundsType(TextBoundsType.VISUAL);
+            circle.setCenterY(SPACE_WIDTH/2.0);
+            circle.setCenterX(SPACE_HEIGHT/2.0);
+            pane.getChildren().addAll(circle, number);
+            this.getChildren().add(pane);
         }
     }
 }
