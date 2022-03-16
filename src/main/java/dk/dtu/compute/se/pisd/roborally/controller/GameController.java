@@ -361,6 +361,11 @@ public class GameController {
         CommandCard sourceCard = source.getCard();
         CommandCard targetCard = target.getCard();
         if (sourceCard != null && targetCard == null) {
+            // Make sure that again-cards cannot be put in the first programming field
+            for(int i = 0; i < board.getPlayersNumber(); i++){
+                if(sourceCard.command.equals(Command.AGAIN) && board.getPlayer(i).getProgramField(0) == target)
+                    return false;
+            }
             target.setCard(sourceCard);
             source.setCard(null);
             return true;
