@@ -195,43 +195,50 @@ public class GameController {
     }
 
     // XXX: V2
+    Command prev;
     private void executeCommand(@NotNull Player player, Command command) {
         if (player != null && player.board == board && command != null) {
             // XXX This is a very simplistic way of dealing with some basic cards and
             //     their execution. This should eventually be done in a more elegant way
             //     (this concerns the way cards are modelled as well as the way they are executed).
 
-            switch (command) {
-                case FORWARD:
-                    this.moveForward(player);
-                    break;
-                case RIGHT:
-                    this.turnRight(player);
-                    break;
-                case LEFT:
-                    this.turnLeft(player);
-                    break;
-                case FAST_FORWARD:
-                    this.fastForward(player);
-                    break;
-                    // XXX Assignment A3
-                case MOVE_TWO:
-                    this.moveForward(player);
-                    this.moveForward(player);
-                    break;
-                case U_TURN:
-                    this.turnLeft(player);
-                    this.turnLeft(player);
-                    break;
-                case BACK_UP:
-                    this.moveBackward(player);
-                    break;
-                case AGAIN:
-                default:
-                    // DO NOTHING (for now)
+            if(command!=Command.AGAIN){
+            prev=command;}
+            else {
+                command=prev;
             }
-        }
+
+    switch (command) {
+        case FORWARD:
+            this.moveForward(player);
+            break;
+        case RIGHT:
+            this.turnRight(player);
+            break;
+        case LEFT:
+            this.turnLeft(player);
+            break;
+        case FAST_FORWARD:
+            this.fastForward(player);
+            break;
+        // XXX Assignment A3
+        case MOVE_TWO:
+            this.moveForward(player);
+            this.moveForward(player);
+            break;
+        case U_TURN:
+            this.turnLeft(player);
+            this.turnLeft(player);
+            break;
+        case BACK_UP:
+            this.moveBackward(player);
+            break;
+        default:
+            // DO NOTHING (for now)
     }
+}
+        }
+
 
     private void moveToSpace(@NotNull Player player,
                              @NotNull Space space,
