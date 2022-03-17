@@ -195,19 +195,11 @@ public class GameController {
     }
 
     // XXX: V2
-    Command prev;
     private void executeCommand(@NotNull Player player, Command command) {
         if (player != null && player.board == board && command != null) {
             // XXX This is a very simplistic way of dealing with some basic cards and
             //     their execution. This should eventually be done in a more elegant way
             //     (this concerns the way cards are modelled as well as the way they are executed).
-
-            if(command!=Command.AGAIN){
-            prev=command;}
-            else {
-                command=prev;
-            }
-
     switch (command) {
         case FORWARD:
             this.moveForward(player);
@@ -232,6 +224,9 @@ public class GameController {
             break;
         case BACK_UP:
             this.moveBackward(player);
+            break;
+        case AGAIN:
+            again(player, command);
             break;
         default:
             // DO NOTHING (for now)
@@ -292,8 +287,13 @@ public class GameController {
       this.turnLeft(player);
     }
     // XXX Assignment A3
-    public void again(@NotNull Player player){
-
+    public void again(@NotNull Player player, @NotNull Command command){
+        for(int i = 1; i < 5; i++){
+            if(player.getProgramField(i) != null && player.getProgramField(i).getCard().command == command){
+                executeCommand(player, player.getProgramField(i-1).getCard().command);
+                return;
+            }
+        }
     }
 
     // TODO Assignment V2
