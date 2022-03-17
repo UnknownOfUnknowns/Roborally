@@ -22,6 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.model;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.controller.AppController;
 import org.jetbrains.annotations.NotNull;
 
 import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
@@ -41,6 +42,7 @@ public class Player extends Subject {
 
     private String name;
     private String color;
+    private int energy;
 
     private Space space;
     private Heading heading = SOUTH;
@@ -142,4 +144,13 @@ public class Player extends Subject {
     public void setCheckpointsReached(int checkpointsReached) {
         this.checkpointsReached = checkpointsReached;
     }
+    public void setEnergy(int energy){
+        this.energy=energy;
+    }
+
+    public int energy(){
+        return energy;
+    }
+
+
 }
