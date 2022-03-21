@@ -36,16 +36,16 @@ public class EnergySpaceTest {
         current.getProgramField(1).setCard(new CommandCard(Command.FORWARD));
         int oldEnergy = current.getEnergyCubes();
         gameController.executePrograms();
-        Assertions.assertEquals(oldEnergy+1, current.getEnergyCubes(), "The player should be on the space following the ConveyerBelt");
+        Assertions.assertEquals(oldEnergy+1, current.getEnergyCubes(), "The player should have 7 energy cubes");
     }
     @Test
     void receivesEnergySpaceFromBank(){
         Board board = gameController.board;
         board.setPhase(Phase.ACTIVATION);
         Player current = board.getCurrentPlayer();
-        current.getProgramField(0).setCard(new CommandCard(Command.FORWARD));
+        current.getProgramField(4).setCard(new CommandCard(Command.FORWARD));
         int oldEnergy = current.getEnergyCubes();
         gameController.executePrograms();
-        Assertions.assertEquals(oldEnergy+2, current.getEnergyCubes(), "The player should be on the space following the ConveyerBelt");
+        Assertions.assertEquals(oldEnergy+2, current.getEnergyCubes(), "The player should have 7 energy cubes");
     }
 }
