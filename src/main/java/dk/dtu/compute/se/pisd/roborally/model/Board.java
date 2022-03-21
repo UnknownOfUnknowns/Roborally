@@ -213,6 +213,10 @@ public class Board extends Subject {
         }
     }
 
+    public List<Player> getPlayers() {
+        return players;
+    }
+
     public String getStatusMessage() {
         // this is actually a view aspect, but for making assignment V1 easy for
         // the students, this method gives a string representation of the current
