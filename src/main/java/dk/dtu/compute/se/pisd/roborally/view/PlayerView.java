@@ -210,20 +210,32 @@ the default background for the programming phase.
                     //      an interactive command card, and the buttons should represent
                     //      the player's choices of the interactive command card. The
                     //      following is just a mockup showing two options
+
                     Command command = player.getProgramField(player.board.getStep()).getCard().command;
-                    if (command != null && command.isInteractive()) {
-                        List<Command> commandOptions = command.getOptions();
-                        if (commandOptions != null) {
-                            for (Command com : commandOptions) {
-                                Button optionButton = new Button(com.name());
-                                optionButton.setOnAction(e -> gameController.executeCommandOptionAndContinue(com));
-                                optionButton.setDisable(false);
-                                playerInteractionPanel.getChildren().add(optionButton);
-                            }
+                    if(command != null) {
+                        if (command.isInteractive()) {
+                            showInteractiveProgrammingCard(command);
+                        } else if(command.equals(Command.AGAIN)){
+                            CommandCard prevCommandCard = player.getProgramField(player.board.getStep()-1).getCard();
+                            if(prevCommandCard != null && prevCommandCard.command.isInteractive())
+                                showInteractiveProgrammingCard(prevCommandCard.command);
                         }
                     }
                 }
             }
         }
     }
+
+    private void showInteractiveProgrammingCard(Command command) {
+        List<Command> commandOptions = command.getOptions();
+        if (commandOptions != null) {
+            for (Command com : commandOptions) {
+                Button optionButton = new Button(com.name());
+                optionButton.setOnAction(e -> gameController.executeCommandOptionAndContinue(com));
+                optionButton.setDisable(false);
+                playerInteractionPanel.getChildren().add(optionButton);
+            }
+        }
+    }
+
 }

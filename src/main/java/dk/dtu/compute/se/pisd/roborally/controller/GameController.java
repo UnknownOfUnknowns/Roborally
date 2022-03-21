@@ -153,9 +153,15 @@ public class GameController {
             if (step >= 0 && step < Player.NO_REGISTERS) {
                 CommandCard card = currentPlayer.getProgramField(step).getCard();
                 if (card != null) {
-                    if(card.getName().equals("Left OR Right")){
+                    if(card.command.isInteractive()){
                         board.setPhase(Phase.PLAYER_INTERACTION);
                         return;
+                    }else if(card.command.equals(Command.AGAIN)){
+                        CommandCard prevCard = currentPlayer.getProgramField(step-1).getCard();
+                        if(prevCard.command.isInteractive()){
+                            board.setPhase(Phase.PLAYER_INTERACTION);
+                            return;
+                        }
                     }
                     Command command = card.command;
                     executeCommand(currentPlayer, command);
@@ -177,13 +183,7 @@ public class GameController {
                         board.setStep(step);
                         board.setCurrentPlayer(board.getPlayer(0));
                     } else {
-                        // Check if any players are on an energy space after the fifth register, if they are, give them an energy cube.
-                        for (Player player: board.getPlayers()) {
-                            BoardElement element = player.getSpace().getBoardElement();
-                            if (element != null && element.getClass()== EnergySpace.class){
-                                player.setEnergyCubes(player.getEnergyCubes() + 1);
-                            }
-                        }
+
                         startProgrammingPhase();
                     }
                     /* we repeat for every player in order of turn, and once the activation phase for
@@ -298,7 +298,9 @@ public class GameController {
     public void again(@NotNull Player player, @NotNull Command command){
         for(int i = 1; i < 5; i++){
             if(player.getProgramField(i) != null && player.getProgramField(i).getCard().command == command){
-                executeCommand(player, player.getProgramField(i-1).getCard().command);
+                CommandCard prevCommandCard = player.getProgramField(i-1).getCard();
+                if(prevCommandCard != null)
+                    executeCommand(player, prevCommandCard.command);
                 return;
             }
         }

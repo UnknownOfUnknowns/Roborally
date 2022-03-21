@@ -41,6 +41,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -93,6 +94,7 @@ public class AppController implements Observer {
             board.getSpace(3,3).setBoardElement(new ConveyerBelt(board.getSpace(3,3), Heading.NORTH));
             board.getSpace(3,2).setBoardElement(new Gear(TurnDirection.LEFT));
             board.getSpace(4,4).setBoardElement(new Checkpoint(1));
+            board.getSpace(0,3).setWalls(new ArrayList<>(Arrays.asList(Heading.NORTH)));
             // XXX: V2
             board.setCurrentPlayer(board.getPlayer(0));
             gameController.startProgrammingPhase();
