@@ -145,6 +145,19 @@ public class GameController {
         } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
     }
 
+    private boolean winnerFound(){
+        if(board.CHECKPOINTS != 0){
+            for (Player player: board.getPlayers()) {
+                if(player.getCheckpointsReached() == board.CHECKPOINTS){
+                    board.setWinner(player);
+                    board.setPhase(Phase.GAME_FINISHED);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     // XXX: V2
     private void executeNextStep() {
         Player currentPlayer = board.getCurrentPlayer();
@@ -169,6 +182,8 @@ public class GameController {
                     if(element != null)
                         element.interact(currentPlayer);
                 }
+                if(winnerFound())
+                    return;
                   /* if the activation phase is active, the steps of the players are executed.
                     Once an interactive card is hit, we display the options, and then continue.
 
@@ -280,7 +295,7 @@ public class GameController {
                     try {
                         moveToSpace(player, newSpace, player.getHeading());
                     } catch (ImpossibleMoveException e){
-                        System.out.println("ERR");
+
                     }
                 }
             }
