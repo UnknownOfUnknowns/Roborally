@@ -54,7 +54,7 @@ public class Player extends Subject {
         this.board = board;
         this.name = name;
         this.color = color;
-
+        this.checkpointsReached = 0;
         this.space = null;
 
         program = new CommandCardField[NO_REGISTERS];
