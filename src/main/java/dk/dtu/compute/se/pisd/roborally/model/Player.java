@@ -49,6 +49,7 @@ public class Player extends Subject {
     private CommandCardField[] cards;
 
     private int checkpointsReached;
+    private int energyCubes;
 
     public Player(@NotNull Board board, String color, @NotNull String name) {
         this.board = board;
@@ -56,6 +57,7 @@ public class Player extends Subject {
         this.color = color;
         this.checkpointsReached = 0;
         this.space = null;
+        this.energyCubes = 5;
 
         program = new CommandCardField[NO_REGISTERS];
         for (int i = 0; i < program.length; i++) {
@@ -140,6 +142,13 @@ public class Player extends Subject {
     }
 
     public void setCheckpointsReached(int checkpointsReached) {
-        this.checkpointsReached = checkpointsReached;
+        this.checkpointsReached = checkpointsReached;}
+
+    public int getEnergyCubes() {
+        return energyCubes;
+    }
+
+    public void setEnergyCubes(int energyCubes) {
+        this.energyCubes = energyCubes;
     }
 }

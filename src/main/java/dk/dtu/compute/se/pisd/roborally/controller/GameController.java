@@ -24,6 +24,7 @@ package dk.dtu.compute.se.pisd.roborally.controller;
 import com.sun.javafx.sg.prism.NGRectangle;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.BoardElement;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.EnergySpace;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -176,6 +177,13 @@ public class GameController {
                         board.setStep(step);
                         board.setCurrentPlayer(board.getPlayer(0));
                     } else {
+                        // Check if any players are on an energy space after the fifth register, if they are, give them an energy cube.
+                        for (Player player: board.getPlayers()) {
+                            BoardElement element = player.getSpace().getBoardElement();
+                            if (element != null && element.getClass()== EnergySpace.class){
+                                player.setEnergyCubes(player.getEnergyCubes() + 1);
+                            }
+                        }
                         startProgrammingPhase();
                     }
                     /* we repeat for every player in order of turn, and once the activation phase for
