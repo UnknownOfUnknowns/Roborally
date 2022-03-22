@@ -30,6 +30,7 @@ import dk.dtu.compute.se.pisd.roborally.model.*;
 
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.Checkpoint;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyerBelt;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.EnergySpace;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.Gear;
 import javafx.application.Platform;
 import javafx.scene.control.*;

@@ -23,14 +23,8 @@ package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.model.*;
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.BoardElement;
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.Checkpoint;
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.Gear;
-import dk.dtu.compute.se.pisd.roborally.view.components.Arrow;
-import dk.dtu.compute.se.pisd.roborally.view.components.ConveyerBelt;
-import javafx.scene.Node;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.*;
+import dk.dtu.compute.se.pisd.roborally.view.components.ConveyerBeltComponent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
@@ -185,10 +179,9 @@ public class SpaceView extends StackPane implements ViewObserver {
             circle.setCenterY(SPACE_HEIGHT/2.0);
             pane.getChildren().add(circle);
             this.getChildren().add(pane);
-        }else if(element.getClass() == dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyerBelt.class){
-            dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyerBelt concreteElement =
-                    (dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyerBelt) element;
-            ConveyerBelt belt = new ConveyerBelt(SPACE_WIDTH, SPACE_HEIGHT);
+        }else if(element.getClass() == ConveyerBelt.class){
+            ConveyerBelt concreteElement = (ConveyerBelt) element;
+            ConveyerBeltComponent belt = new ConveyerBeltComponent(SPACE_WIDTH, SPACE_HEIGHT);
             switch (concreteElement.getDirection()){
                 case SOUTH -> belt.setRotate(90);
                 case WEST -> belt.setRotate(180);
@@ -205,6 +198,17 @@ public class SpaceView extends StackPane implements ViewObserver {
             circle.setCenterX(SPACE_HEIGHT/2.0);
             pane.getChildren().addAll(circle, number);
             this.getChildren().add(pane);
-        }
+        } else if(element.getClass() == EnergySpace.class){
+        EnergySpace energySpace = (EnergySpace) element;
+        Polygon energyCube = new Polygon( 5.0,5.0, SPACE_WIDTH-5.0, 5.0, SPACE_WIDTH-5.0, SPACE_HEIGHT-5.0, 5.0, SPACE_HEIGHT-5.0);
+        if(energySpace.getEnergyCubes() > 0)
+            energyCube.setFill(Color.ORANGE);
+        else
+            energyCube.setFill(Color.LIGHTYELLOW);
+        Text number = new Text(String.valueOf(energySpace.getEnergyCubes()));
+        number.setBoundsType(TextBoundsType.VISUAL);
+        pane.getChildren().addAll(energyCube, number);
+        this.getChildren().add(pane);
+    }
     }
 }

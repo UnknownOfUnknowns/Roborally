@@ -22,4 +22,8 @@ public class EnergySpace implements BoardElement{
             player.setEnergyCubes(player.getEnergyCubes() + 1);
         }
     }
+
+    public int getEnergyCubes() {
+        return energyCubes;
+    }
 }
