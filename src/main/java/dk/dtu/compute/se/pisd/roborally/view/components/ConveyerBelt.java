@@ -6,6 +6,9 @@ import javafx.scene.shape.Rectangle;
 
 import java.awt.*;
 
+/**
+ * @author s215718
+ * */
 public class ConveyerBelt extends Pane {
     public ConveyerBelt(double width, double height) {
         Rectangle background = new Rectangle(width, height, Paint.valueOf("blue"));

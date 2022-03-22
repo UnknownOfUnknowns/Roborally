@@ -2,6 +2,9 @@ package dk.dtu.compute.se.pisd.roborally.model.boardElements;
 
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
+/**
+ * @author s215705
+ * */
 public class Checkpoint implements BoardElement{
 
     private int number;

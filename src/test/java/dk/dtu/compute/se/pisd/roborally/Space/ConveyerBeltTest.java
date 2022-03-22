@@ -7,7 +7,9 @@ import dk.dtu.compute.se.pisd.roborally.model.boardElements.Gear;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+/**
+ * @author s215705
+ * */
 public class ConveyerBeltTest {
     private final int TEST_WIDTH = 8;
     private final int TEST_HEIGHT = 8;

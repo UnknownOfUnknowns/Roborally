@@ -150,7 +150,10 @@ public class AppController implements Observer {
     public boolean isGameRunning() {
         return gameController != null;
     }
-
+    /**
+     * @author s215705
+     * When the game is finnished this functions prompts the message to the player
+     * */
     @Override
     public void update(Subject subject) {
         if(gameController.board.getPhase().equals(Phase.GAME_FINISHED)){

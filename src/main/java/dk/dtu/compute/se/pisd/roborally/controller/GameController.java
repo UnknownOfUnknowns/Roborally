@@ -159,6 +159,11 @@ public class GameController {
     }
 
     // XXX: V2
+    /**
+     * @author s215705
+     * @author s215722
+     * Executes the active register for the current player. The function handles the possibility of a command being interactive
+     * */
     private void executeNextStep() {
         Player currentPlayer = board.getCurrentPlayer();
         if (board.getPhase() == Phase.ACTIVATION && currentPlayer != null) {
@@ -217,7 +222,10 @@ public class GameController {
         }
     }
 
-    // XXX: V2
+    /**
+     * @author s215722
+     * Delegates the execution of a command to relevant functions
+     * */
     private void executeCommand(@NotNull Player player, Command command) {
         if (player != null && player.board == board && command != null) {
             // XXX This is a very simplistic way of dealing with some basic cards and
@@ -257,7 +265,10 @@ public class GameController {
 }
         }
 
-
+    /**
+     * @author s215705
+     * Moves a player to a space if it is legal otherwise ImpossibleMoveException is thrown
+     * */
     private void moveToSpace(@NotNull Player player,
                              @NotNull Space space,
                              @NotNull Heading heading) throws ImpossibleMoveException{
@@ -284,7 +295,9 @@ public class GameController {
         }
         player.setSpace(space);
     }
-
+    /**
+     * @author s215722
+     * */
     // TODO Assignment V2
     public void moveForward(@NotNull Player player) {
         if (board != null && player != null && player.board == board) {
@@ -301,7 +314,11 @@ public class GameController {
             }
         }
     }
-    // XXX Assignment A3
+
+
+    /**
+     * @author s215722
+     * */
     public void moveBackward(@NotNull Player player){
       this.turnLeft(player);
       this.turnLeft(player);
@@ -309,7 +326,9 @@ public class GameController {
       this.turnLeft(player);
       this.turnLeft(player);
     }
-    // XXX Assignment A3
+    /**
+     * @author s215722
+     * */
     public void again(@NotNull Player player, @NotNull Command command){
         for(int i = 1; i < 5; i++){
             if(player.getProgramField(i) != null && player.getProgramField(i).getCard().command == command){
@@ -321,13 +340,17 @@ public class GameController {
         }
     }
 
-    // TODO Assignment V2
+    /**
+     * @author s215722
+     * */
     public void fastForward(@NotNull Player player) {
         for (int i = 0; i < 3; i++)
             moveForward(player);
     }
 
-    // TODO Assignment V2
+    /**
+     * @author s215722
+     * */
     public void turnRight(@NotNull Player player) {
         if(board!=null && player!=null && player.board==board){
             Heading currentHeading = player.getHeading();
@@ -339,7 +362,9 @@ public class GameController {
         }
     }
 
-    // TODO Assignment V2
+    /**
+     * @author s215722
+     * */
     public void turnLeft(@NotNull Player player) {
         if(board!=null && player!=null && player.board==board){
             Heading currentHeading = player.getHeading();
@@ -350,7 +375,6 @@ public class GameController {
             }
         }
     }
-
     public void executeCommandOptionAndContinue(Command option){
         Player currentPlayer = board.getCurrentPlayer();
         int step = board.getStep();
@@ -381,7 +405,11 @@ public class GameController {
     is reached, we also assure that it is not the turn of the player #1. When the activation phase for all
     players is set, we activate the programming phase.
      */
-
+    /**
+     * @author s215718
+     * Moves cards from the program to the cards line and vice versa, makes sure that an again-card cannot be put in
+     * 1st place of the programming line
+     * */
     public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
         CommandCard sourceCard = source.getCard();
         CommandCard targetCard = target.getCard();

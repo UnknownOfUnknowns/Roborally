@@ -7,7 +7,9 @@ import dk.dtu.compute.se.pisd.roborally.model.boardElements.EnergySpace;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+/**
+ * @author s211638
+ * */
 public class EnergySpaceTest {
     private final int TEST_WIDTH = 8;
     private final int TEST_HEIGHT = 8;

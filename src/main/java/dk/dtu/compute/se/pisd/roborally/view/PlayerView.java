@@ -225,7 +225,10 @@ the default background for the programming phase.
             }
         }
     }
-
+    /**
+     * @author s215705
+     * Shows the options of an interactive programmingcard to the player and forwards the command to gameController
+     * */
     private void showInteractiveProgrammingCard(Command command) {
         List<Command> commandOptions = command.getOptions();
         if (commandOptions != null) {

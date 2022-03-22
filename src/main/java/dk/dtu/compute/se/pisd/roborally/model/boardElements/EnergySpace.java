@@ -1,7 +1,9 @@
 package dk.dtu.compute.se.pisd.roborally.model.boardElements;
 
 import dk.dtu.compute.se.pisd.roborally.model.Player;
-
+/**
+ * @author s211638
+ * */
 public class EnergySpace implements BoardElement{
 
     private int energyCubes;

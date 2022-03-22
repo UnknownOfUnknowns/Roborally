@@ -3,6 +3,9 @@ package dk.dtu.compute.se.pisd.roborally.model.boardElements;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.TurnDirection;
 
+/**
+ * @author s215705
+ * */
 public class Gear implements BoardElement{
     private TurnDirection turnDirection;
 

@@ -3,7 +3,9 @@ package dk.dtu.compute.se.pisd.roborally.model.boardElements;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
-
+/**
+ * @author s215705
+ * */
 public class ConveyerBelt implements BoardElement{
     Space space;
     Heading direction;

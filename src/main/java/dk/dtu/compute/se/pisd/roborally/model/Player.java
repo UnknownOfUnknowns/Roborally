@@ -31,6 +31,8 @@ import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  * Player is responsible for holding information about the individual players
+ * @author s211638
+ * s2116438 has been responsible for energyCubes and checkpointsReached
  */
 public class Player extends Subject {
 

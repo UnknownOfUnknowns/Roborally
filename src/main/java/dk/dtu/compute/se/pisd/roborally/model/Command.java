@@ -29,7 +29,8 @@ import java.util.List;
  * ...
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- *
+ * @author s215722
+ * s215722 has added the additional commands
  */
 public enum Command {
 

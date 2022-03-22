@@ -111,6 +111,10 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     }
 
+    /**
+     * @author s215705
+     * Renders the walls on the square
+     * */
     private void renderWalls(){
         if(space.getWalls() != null) {
             for (Heading heading : space.getWalls()) {
@@ -158,6 +162,10 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
     }
 
+    /**
+     * @author s215705
+     * Has the responsibility of drawing the optional boardelemnt on the square
+     * */
     private void renderBoardElement(){
         Pane pane = new StackPane();
         Rectangle rectangle =
