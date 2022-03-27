@@ -25,9 +25,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
-import dk.dtu.compute.se.pisd.roborally.fileaccess.model.BoardTemplate;
-import dk.dtu.compute.se.pisd.roborally.fileaccess.model.SpaceTemplate;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 
@@ -43,6 +40,14 @@ import java.io.InputStreamReader;
  */
 public class LoadBoard {
 
+    private static final String BOARDSFOLDER = "boards";
+    private static final String DEFAULTBOARD = "defaultboard";
+    private static final String JSON_EXT = "json";
 
-
+    public static Board loadBoard(String boardname) {
+        if (boardname == null) {
+            boardname = DEFAULTBOARD;
+        }
+        return new Board(8, 8);
+    }
 }
