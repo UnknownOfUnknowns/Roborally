@@ -31,4 +31,15 @@ CREATE TABLE IF NOT EXISTS Player (
   ON DELETE CASCADE
 );;
 
+CREATE TABLE IF NOT EXISTS CommandCard(
+    gameID INT NOT NULL,
+    playerID tinyint NOT NULL,
+    command varchar(255),
+    fieldType varchar(15),
+    cardIndex tinyint,
+    FOREIGN KEY (gameID) REFERENCES Game(gameID),
+    FOREIGN KEY (gameID, playerID) REFERENCES Player(gameID, playerID),
+    PRIMARY KEY (gameID, playerID, command, fieldType, cardIndex)
+);;
+
 SET FOREIGN_KEY_CHECKS = 1;;

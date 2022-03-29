@@ -114,10 +114,9 @@ public class AppController implements Observer {
             Optional<String> result = dialog.showAndWait();
 
             savedGames.forEach(gameInDB -> {
-                if(gameInDB.toString().equals(result.get())){
+                if(result.isPresent() && gameInDB.toString().equals(result.get())){
                     Board board = RepositoryAccess.getRepository().loadGameFromDB(gameInDB.id);
                     gameController = new GameController(board);
-                    gameController.startProgrammingPhase();
                     board.attach(this);
                     roboRally.createBoardView(gameController);
                 }
