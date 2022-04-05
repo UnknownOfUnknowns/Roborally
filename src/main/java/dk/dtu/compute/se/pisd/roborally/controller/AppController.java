@@ -26,6 +26,8 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
+import dk.dtu.compute.se.pisd.roborally.dal.GameInDB;
+import dk.dtu.compute.se.pisd.roborally.dal.RepositoryAccess;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.Checkpoint;
@@ -52,8 +54,6 @@ public class AppController implements Observer {
 
     final private List<Integer> PLAYER_NUMBER_OPTIONS = Arrays.asList(2, 3, 4, 5, 6);
     final private List<String> PLAYER_COLORS = Arrays.asList("red", "green", "blue", "orange", "grey", "magenta");
-
-
     final private RoboRally roboRally;
 
     private GameController gameController;
@@ -87,24 +87,40 @@ public class AppController implements Observer {
                 board.addPlayer(player);
                 player.setSpace(board.getSpace(i % board.width, i));
             }
-
             // XXX: V2
             board.setCurrentPlayer(board.getPlayer(0));
             gameController.startProgrammingPhase();
             board.attach(this);
             roboRally.createBoardView(gameController);
+            RepositoryAccess.getRepository().createGameInDB(board);
         }
     }
 
     public void saveGame() {
-        // XXX needs to be implemented eventually
+        if(gameController != null){
+            RepositoryAccess.getRepository().updateGameInDB(gameController.board);
+        }
     }
 
     public void loadGame() {
-        // XXX needs to be implememted eventually
-        // for now, we just create a new game
-        if (gameController == null) {
-            newGame();
+
+        List<GameInDB> savedGames = RepositoryAccess.getRepository().getGames();
+        if(savedGames != null && !savedGames.isEmpty()) {
+            List<String> gameNames = new ArrayList<>();
+            savedGames.forEach(e -> {gameNames.add(e.toString());});
+            ChoiceDialog<String> dialog = new ChoiceDialog<>(gameNames.get(0), gameNames);
+            dialog.setTitle("Player number");
+            dialog.setHeaderText("Select number of players");
+            Optional<String> result = dialog.showAndWait();
+
+            savedGames.forEach(gameInDB -> {
+                if(result.isPresent() && gameInDB.toString().equals(result.get())){
+                    Board board = RepositoryAccess.getRepository().loadGameFromDB(gameInDB.id);
+                    gameController = new GameController(board);
+                    board.attach(this);
+                    roboRally.createBoardView(gameController);
+                }
+            });
         }
     }
 
@@ -158,6 +174,8 @@ public class AppController implements Observer {
      * */
     @Override
     public void update(Subject subject) {
+        //The game is automatically saved whenever a move is made
+        saveGame();
         if(gameController.board.getPhase().equals(Phase.GAME_FINISHED)){
             ButtonType okButton = new ButtonType("Finish", ButtonBar.ButtonData.OK_DONE);
             Dialog<String> winnerFoundDialog = new Dialog<>();
