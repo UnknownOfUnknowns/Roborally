@@ -49,6 +49,7 @@ public class Board extends Subject {
 
     private final List<Player> players = new ArrayList<>();
 
+    private Player winner = null;
     private Player current;
 
     private Phase phase = INITIALISATION;
@@ -58,6 +59,8 @@ public class Board extends Subject {
     private int counter = 0;
 
     private boolean stepMode;
+
+    public final int CHECKPOINTS;
 
     public Board(int width, int height, @NotNull String boardName) {
         this.boardName = boardName;
@@ -70,6 +73,21 @@ public class Board extends Subject {
                 spaces[x][y] = space;
             }
         }
+        this.CHECKPOINTS = 0;
+        this.stepMode = false;
+    }
+    public Board(int width, int height, @NotNull String boardName, int checkpoints) {
+        this.boardName = boardName;
+        this.width = width;
+        this.height = height;
+        spaces = new Space[width][height];
+        for (int x = 0; x < width; x++) {
+            for(int y = 0; y < height; y++) {
+                Space space = new Space(this, x, y);
+                spaces[x][y] = space;
+            }
+        }
+        this.CHECKPOINTS = checkpoints;
         this.stepMode = false;
     }
 
@@ -211,6 +229,19 @@ public class Board extends Subject {
             this.counter = counter;
         notifyChange();
         }
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public Player getWinner() {
+        return winner;
+    }
+
+    public void setWinner(Player winner) {
+        this.winner = winner;
+        notifyChange();
     }
 
     public String getStatusMessage() {

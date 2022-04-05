@@ -32,6 +32,8 @@ import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
  *
  * @author Ekkart Kindler, ekki@dtu.dk
  * Player is responsible for holding information about the individual players
+ * @author s211638
+ * s2116438 has been responsible for energyCubes and checkpointsReached
  */
 public class Player extends Subject {
 
@@ -51,13 +53,15 @@ public class Player extends Subject {
     private CommandCardField[] cards;
 
     private int checkpointsReached;
+    private int energyCubes;
 
     public Player(@NotNull Board board, String color, @NotNull String name) {
         this.board = board;
         this.name = name;
         this.color = color;
-
+        this.checkpointsReached = 0;
         this.space = null;
+        this.energyCubes = 5;
 
         program = new CommandCardField[NO_REGISTERS];
         for (int i = 0; i < program.length; i++) {
@@ -142,7 +146,14 @@ public class Player extends Subject {
     }
 
     public void setCheckpointsReached(int checkpointsReached) {
-        this.checkpointsReached = checkpointsReached;
+        this.checkpointsReached = checkpointsReached;}
+
+    public int getEnergyCubes() {
+        return energyCubes;
+    }
+
+    public void setEnergyCubes(int energyCubes) {
+        this.energyCubes = energyCubes;
     }
     public void setEnergy(int energy){
         this.energy=energy;

@@ -26,21 +26,18 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
-import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Heading;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 
-import dk.dtu.compute.se.pisd.roborally.model.TurnDirection;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.Checkpoint;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyerBelt;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.EnergySpace;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.Gear;
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -91,13 +88,10 @@ public class AppController implements Observer {
                 player.setSpace(board.getSpace(i % board.width, i));
             }
 
-            board.getSpace(3,3).setBoardElement(new ConveyerBelt(board.getSpace(3,3), Heading.NORTH));
-            board.getSpace(3,2).setBoardElement(new Gear(TurnDirection.LEFT));
-            board.getSpace(4,4).setBoardElement(new Checkpoint(1));
             // XXX: V2
             board.setCurrentPlayer(board.getPlayer(0));
             gameController.startProgrammingPhase();
-
+            board.attach(this);
             roboRally.createBoardView(gameController);
         }
     }
@@ -158,11 +152,22 @@ public class AppController implements Observer {
     public boolean isGameRunning() {
         return gameController != null;
     }
-
-
+    /**
+     * @author s215705
+     * When the game is finnished this functions prompts the message to the player
+     * */
     @Override
     public void update(Subject subject) {
-        // XXX do nothing for now
+        if(gameController.board.getPhase().equals(Phase.GAME_FINISHED)){
+            ButtonType okButton = new ButtonType("Finish", ButtonBar.ButtonData.OK_DONE);
+            Dialog<String> winnerFoundDialog = new Dialog<>();
+            Player winner = gameController.board.getWinner();
+            winnerFoundDialog.getDialogPane().getButtonTypes().add(okButton);
+            winnerFoundDialog.getDialogPane().lookupButton(okButton).setDisable(false);
+            winnerFoundDialog.setContentText(winner.getName() + " has won this game");
+            winnerFoundDialog.showAndWait();
+            stopGame();
+        }
     }
 
 }

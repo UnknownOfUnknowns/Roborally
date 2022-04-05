@@ -2,14 +2,15 @@ package dk.dtu.compute.se.pisd.roborally.Space;
 
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.*;
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.Gear;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyerBelt;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.EnergySpace;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 /**
- * @author s211705
+ * @author s211638
  * */
-public class GearTest {
+public class EnergySpaceTest {
     private final int TEST_WIDTH = 8;
     private final int TEST_HEIGHT = 8;
 
@@ -26,16 +27,27 @@ public class GearTest {
             player.setHeading(Heading.values()[i % Heading.values().length]);
         }
         board.setCurrentPlayer(board.getPlayer(0));
-        board.getSpace(0,1).setBoardElement(new Gear(TurnDirection.RIGHT));
+        board.getSpace(0,1).setBoardElement(new EnergySpace());
     }
-
     @Test
-    void turnWhenLandedOn(){
+    void useEnergySpace(){
         Board board = gameController.board;
         board.setPhase(Phase.ACTIVATION);
         Player current = board.getCurrentPlayer();
         current.getProgramField(0).setCard(new CommandCard(Command.FORWARD));
+        current.getProgramField(1).setCard(new CommandCard(Command.FORWARD));
+        int oldEnergy = current.getEnergyCubes();
         gameController.executePrograms();
-        Assertions.assertEquals(Heading.WEST, current.getHeading(), "Should be facing west");
+        Assertions.assertEquals(oldEnergy+1, current.getEnergyCubes(), "The player should have 7 energy cubes");
+    }
+    @Test
+    void receivesEnergySpaceFromBank(){
+        Board board = gameController.board;
+        board.setPhase(Phase.ACTIVATION);
+        Player current = board.getCurrentPlayer();
+        current.getProgramField(4).setCard(new CommandCard(Command.FORWARD));
+        int oldEnergy = current.getEnergyCubes();
+        gameController.executePrograms();
+        Assertions.assertEquals(oldEnergy+2, current.getEnergyCubes(), "The player should have 7 energy cubes");
     }
 }

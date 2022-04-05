@@ -29,7 +29,8 @@ import java.util.List;
  * ...
  *
  * @author Ekkart Kindler, ekki@dtu.dk
- *
+ * @author s215722
+ * s215722 has added the additional commands
  */
 public enum Command {
 
@@ -43,7 +44,7 @@ public enum Command {
     MOVE_TWO("Fwd 2"),
     U_TURN("U-turn"),
     BACK_UP("Back 1"),
-    AGAIN("again"),
+    AGAIN("Again"),
 
     // XXX Assignment V3
     OPTION_LEFT_RIGHT("Left OR Right", LEFT, RIGHT);

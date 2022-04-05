@@ -7,7 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-
+/**
+ * @author s215718
+ * */
 class GameControllerTest {
 
     private final int TEST_WIDTH = 8;
