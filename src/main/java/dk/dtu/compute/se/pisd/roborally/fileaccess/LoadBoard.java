@@ -25,9 +25,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import dk.dtu.compute.se.pisd.roborally.fileaccess.model.BoardTemplate;
+import dk.dtu.compute.se.pisd.roborally.fileaccess.model.SpaceTemplate;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.BoardElement;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyorBelt;
 
+import javax.sound.midi.Soundbank;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +53,38 @@ public class LoadBoard {
         if (boardname == null) {
             boardname = DEFAULTBOARD;
         }
-        return new Board(8, 8);
+
+        GsonBuilder builder = new GsonBuilder().registerTypeAdapter(
+                BoardElement.class, new Adapter<BoardElement>());
+
+        Gson gson = builder.create();
+        ClassLoader classLoader = LoadBoard.class.getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(
+                BOARDSFOLDER + "/" + boardname+".json");
+
+        if(inputStream != null) {
+            InputStreamReader streamReader = new InputStreamReader(inputStream);
+            JsonReader reader = gson.newJsonReader(streamReader);
+            BoardTemplate boardTemplate = gson.fromJson(reader, BoardTemplate.class);
+            try {
+                reader.close();
+            } catch (IOException e) {
+
+            }
+            if(boardTemplate != null) {
+                Board board = new Board(boardTemplate.width, boardTemplate.height);
+                if (boardTemplate.spaces != null) {
+                    for (SpaceTemplate spaceTemplate : boardTemplate.spaces) {
+                        Space space = board.getSpace(spaceTemplate.x, spaceTemplate.y);
+                        space.setWalls(spaceTemplate.walls);
+                        BoardElement element = spaceTemplate.actions.get(0);
+                        space.setBoardElement(element);
+                    }
+                }
+                return board;
+            }
+        }
+        return new Board(8,8);
+
     }
 }

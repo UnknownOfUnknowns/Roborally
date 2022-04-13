@@ -377,6 +377,10 @@ public class GameController {
             }
         }
     }
+
+    /**
+     * @author s215722
+     * */
     public void executeCommandOptionAndContinue(Command option){
         Player currentPlayer = board.getCurrentPlayer();
         int step = board.getStep();

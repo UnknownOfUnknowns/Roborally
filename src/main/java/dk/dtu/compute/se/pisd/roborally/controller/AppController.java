@@ -28,12 +28,9 @@ import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
 import dk.dtu.compute.se.pisd.roborally.dal.GameInDB;
 import dk.dtu.compute.se.pisd.roborally.dal.RepositoryAccess;
+import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.Checkpoint;
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyerBelt;
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.EnergySpace;
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.Gear;
 import javafx.application.Platform;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -79,7 +76,7 @@ public class AppController implements Observer {
 
             // XXX the board should eventually be created programmatically or loaded from a file
             //     here we just create an empty board with the required number of players.
-            Board board = new Board(8,8);
+            Board board = LoadBoard.loadBoard(null);
             gameController = new GameController(board);
             int no = result.get();
             for (int i = 0; i < no; i++) {

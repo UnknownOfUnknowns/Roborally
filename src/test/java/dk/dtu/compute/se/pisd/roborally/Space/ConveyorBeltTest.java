@@ -2,15 +2,14 @@ package dk.dtu.compute.se.pisd.roborally.Space;
 
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.*;
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyerBelt;
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.Gear;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyorBelt;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 /**
  * @author s215705
  * */
-public class ConveyerBeltTest {
+public class ConveyorBeltTest {
     private final int TEST_WIDTH = 8;
     private final int TEST_HEIGHT = 8;
 
@@ -27,7 +26,7 @@ public class ConveyerBeltTest {
             player.setHeading(Heading.values()[i % Heading.values().length]);
         }
         board.setCurrentPlayer(board.getPlayer(0));
-        board.getSpace(0,1).setBoardElement(new ConveyerBelt(board.getSpace(0,1), Heading.SOUTH));
+        board.getSpace(0,1).setBoardElement(new ConveyorBelt(Heading.SOUTH));
     }
 
     @Test

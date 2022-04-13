@@ -179,8 +179,8 @@ public class SpaceView extends StackPane implements ViewObserver {
             circle.setCenterY(SPACE_HEIGHT/2.0);
             pane.getChildren().add(circle);
             this.getChildren().add(pane);
-        }else if(element.getClass() == ConveyerBelt.class){
-            ConveyerBelt concreteElement = (ConveyerBelt) element;
+        }else if(element.getClass() == ConveyorBelt.class){
+            ConveyorBelt concreteElement = (ConveyorBelt) element;
             ConveyerBeltComponent belt = new ConveyerBeltComponent(SPACE_WIDTH, SPACE_HEIGHT);
             switch (concreteElement.getDirection()){
                 case SOUTH -> belt.setRotate(90);

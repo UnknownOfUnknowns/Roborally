@@ -2,7 +2,6 @@ package dk.dtu.compute.se.pisd.roborally.Space;
 
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.*;
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyerBelt;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.EnergySpace;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

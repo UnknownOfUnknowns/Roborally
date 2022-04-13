@@ -3,7 +3,6 @@ package dk.dtu.compute.se.pisd.roborally.Space;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.Checkpoint;
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyerBelt;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

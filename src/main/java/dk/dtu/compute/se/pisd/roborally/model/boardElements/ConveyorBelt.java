@@ -6,27 +6,26 @@ import dk.dtu.compute.se.pisd.roborally.model.Space;
 /**
  * @author s215705
  * */
-public class ConveyerBelt implements BoardElement{
-    Space space;
-    Heading direction;
+public class ConveyorBelt implements BoardElement{
+    Heading heading;
 
-    public ConveyerBelt(Space space, Heading heading){
-        this.space = space;
-        this.direction = heading;
+    public ConveyorBelt(Heading heading){
+        this.heading = heading;
     }
 
     @Override
     public void interact(Player player) {
-        Space newSpace = space.board.getNeighbour(space, direction);
+        Space newSpace = player.board.getNeighbour(player.getSpace(), heading);
         if(newSpace.getPlayer() == null){
             player.setSpace(newSpace);
-            if(newSpace.getBoardElement() != null && newSpace.getBoardElement().getClass() != ConveyerBelt.class){
+            if(newSpace.getBoardElement() != null && newSpace.getBoardElement().getClass() != ConveyorBelt.class){
                 newSpace.getBoardElement().interact(player);
             }
         }
     }
 
     public Heading getDirection() {
-        return direction;
+        return heading;
     }
+
 }
