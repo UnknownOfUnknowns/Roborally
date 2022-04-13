@@ -180,12 +180,10 @@ public class GameController {
                             board.setPhase(Phase.PLAYER_INTERACTION);
                             return;
                         }
+                    }else{
+                        executeCommand(currentPlayer, card.command);
                     }
-                    Command command = card.command;
-                    executeCommand(currentPlayer, command);
-                    BoardElement element = currentPlayer.getSpace().getBoardElement();
-                    if(element != null)
-                        element.interact(currentPlayer);
+
                 }
                 if(winnerFound())
                     return;
@@ -193,10 +191,16 @@ public class GameController {
                     Once an interactive card is hit, we display the options, and then continue.
 
                 */
+
                 int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
                 if (nextPlayerNumber < board.getPlayersNumber()) {
                     board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
                 } else {
+                    for(Player player : board.getPlayers()){
+                        BoardElement element = player.getSpace().getBoardElement();
+                        if(element != null)
+                            element.interact(player);
+                    }
                     step++;
                     if (step < Player.NO_REGISTERS) {
                         makeProgramFieldsVisible(step);
@@ -208,8 +212,6 @@ public class GameController {
                     }
                     /* we repeat for every player in order of turn, and once the activation phase for
                     every player has been executed, we return to the programming phase
-
-
                      */
                 }
             } else {
