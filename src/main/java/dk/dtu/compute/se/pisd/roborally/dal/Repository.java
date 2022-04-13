@@ -48,6 +48,7 @@ class Repository implements IRepository {
 	private static final String GAME_PHASE = "phase";
 
 	private static final String GAME_STEP = "step";
+	private static final String GAME_BOARD_NAME = "boardName";
 
 	private static final String PLAYER_PLAYERID = "playerID";
 
@@ -94,6 +95,7 @@ class Repository implements IRepository {
 				ps.setNull(2, Types.TINYINT); // game.getPlayerNumber(game.getCurrentPlayer())); is inserted after players!
 				ps.setInt(3, game.getPhase().ordinal());
 				ps.setInt(4, game.getStep());
+				ps.setString(5, game.boardName);
 
 				// If you have a foreign key constraint for current players,
 				// the check would need to be temporarily disabled, since
@@ -174,6 +176,7 @@ class Repository implements IRepository {
 				rs.updateInt(GAME_CURRENTPLAYER, game.getPlayerNumber(game.getCurrentPlayer()));
 				rs.updateInt(GAME_PHASE, game.getPhase().ordinal());
 				rs.updateInt(GAME_STEP, game.getStep());
+				rs.updateString(GAME_BOARD_NAME, game.boardName);
 				rs.updateRow();
 			} else {
 				// TODO error handling
@@ -207,7 +210,7 @@ class Repository implements IRepository {
 
 	@Override
 	public Board loadGameFromDB(int id) {
-		Board game;
+		Board game = LoadBoard.loadBoard(null);;
 		try {
 			// TODO here, we could actually use a simpler statement
 			//      which is not updatable, but reuse the one from
@@ -218,15 +221,9 @@ class Repository implements IRepository {
 			ResultSet rs = ps.executeQuery();
 			int playerNo = -1;
 			if (rs.next()) {
-				// TODO the width and height could eventually come from the database
-				// int width = AppController.BOARD_WIDTH;
-				// int height = AppController.BOARD_HEIGHT;
-				// game = new Board(width,height);
-				// TODO and we should also store the used game board in the database
-				//      for now, we use the default game board
-				game = LoadBoard.loadBoard(null);
-				if (game == null) {
-					return null;
+				String boardName = rs.getString(GAME_BOARD_NAME);
+				if(boardName != null) {
+					game = LoadBoard.loadBoard(boardName);
 				}
 				playerNo = rs.getInt(GAME_CURRENTPLAYER);
 				// TODO currently we do not set the games name (needs to be added)
@@ -450,7 +447,7 @@ class Repository implements IRepository {
 	}
 
 	private static final String SQL_INSERT_GAME =
-			"INSERT INTO Game(name, currentPlayer, phase, step) VALUES (?, ?, ?, ?)";
+			"INSERT INTO Game(name, currentPlayer, phase, step, boardName) VALUES (?, ?, ?, ?, ?)";
 
 	private PreparedStatement insert_game_stmt = null;
 
