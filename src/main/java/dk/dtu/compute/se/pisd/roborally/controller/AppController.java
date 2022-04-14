@@ -76,7 +76,15 @@ public class AppController implements Observer {
 
             // XXX the board should eventually be created programmatically or loaded from a file
             //     here we just create an empty board with the required number of players.
-            Board board = LoadBoard.loadBoard(null);
+            ArrayList<String> boards = new ArrayList<>();
+            boards.add("defaultboard");
+            boards.add("emptyboard");
+            ChoiceDialog<String> boardDialog = new ChoiceDialog<>(boards.get(0), boards);
+            boardDialog.setTitle("Player number");
+            boardDialog.setHeaderText("Select number of players");
+            Optional<String> boardResult = boardDialog.showAndWait();
+
+            Board board = LoadBoard.loadBoard(boardResult.get());
             gameController = new GameController(board);
             int no = result.get();
             for (int i = 0; i < no; i++) {
