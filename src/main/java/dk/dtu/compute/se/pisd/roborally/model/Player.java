@@ -25,6 +25,11 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.AppController;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
 import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
 
 /**
@@ -36,7 +41,6 @@ import static dk.dtu.compute.se.pisd.roborally.model.Heading.SOUTH;
  * s2116438 has been responsible for energyCubes and checkpointsReached
  */
 public class Player extends Subject {
-
     final public static int NO_REGISTERS = 5;
     final public static int NO_CARDS = 8;
 
@@ -44,14 +48,14 @@ public class Player extends Subject {
 
     private String name;
     private String color;
-    private int energy;
 
     private Space space;
     private Heading heading = SOUTH;
 
     private CommandCardField[] program;
     private CommandCardField[] cards;
-
+    private List<CommandCard> discardPile;
+    private List<CommandCard> programmingPile;
     private int checkpointsReached;
     private int energyCubes;
 
@@ -62,6 +66,31 @@ public class Player extends Subject {
         this.checkpointsReached = 0;
         this.space = null;
         this.energyCubes = 5;
+        this.discardPile = new ArrayList<>();
+        this.programmingPile = new ArrayList<>(Arrays.asList(
+                new CommandCard(Command.FORWARD),
+                new CommandCard(Command.FORWARD),
+                new CommandCard(Command.FORWARD),
+                new CommandCard(Command.MOVE_TWO),
+                new CommandCard(Command.MOVE_TWO),
+                new CommandCard(Command.MOVE_TWO),
+                new CommandCard(Command.FAST_FORWARD),
+                new CommandCard(Command.FAST_FORWARD),
+                new CommandCard(Command.LEFT),
+                new CommandCard(Command.LEFT),
+                new CommandCard(Command.RIGHT),
+                new CommandCard(Command.RIGHT),
+                new CommandCard(Command.OPTION_LEFT_RIGHT),
+                new CommandCard(Command.OPTION_LEFT_RIGHT),
+                new CommandCard(Command.AGAIN),
+                new CommandCard(Command.AGAIN),
+                new CommandCard(Command.U_TURN),
+                new CommandCard(Command.U_TURN),
+                new CommandCard(Command.BACK_UP),
+                new CommandCard(Command.BACK_UP)
+        ));
+
+        shuffleProgrammingPile();
 
         program = new CommandCardField[NO_REGISTERS];
         for (int i = 0; i < program.length; i++) {
@@ -155,13 +184,43 @@ public class Player extends Subject {
     public void setEnergyCubes(int energyCubes) {
         this.energyCubes = energyCubes;
     }
-    public void setEnergy(int energy){
-        this.energy=energy;
+
+    public CommandCard drawCardFromProgrammingPile(){
+        //empty the discard pile whenever the programmingPile is empty
+        if(programmingPile.isEmpty()){
+            programmingPile.addAll(discardPile);
+            discardPile = new ArrayList<>();
+        }
+        shuffleProgrammingPile();
+        CommandCard card = programmingPile.get(0);
+        programmingPile.remove(0);
+        return card;
     }
 
-    public int energy(){
-        return energy;
+    private void shuffleProgrammingPile(){
+        for(int i = 0; i< 1000; i++){
+            int firstIndex = (int) (Math.random()*programmingPile.size());
+            CommandCard card = programmingPile.get(firstIndex);
+            programmingPile.remove(card);
+            programmingPile.add((int) (Math.random()*programmingPile.size()), card);
+        }
     }
 
+    public void addToDiscardPile(CommandCard commandCard){
+        discardPile.add(commandCard);
+    }
 
+    public void addAllToDiscardPile() {
+        for(CommandCardField field : program){
+            if(field.getCard() != null)
+                addToDiscardPile(field.getCard());
+            field.setCard(null);
+        }
+        for(CommandCardField field : cards){
+            if(field.getCard() != null)
+                addToDiscardPile(field.getCard());
+            field.setCard(null);
+        }
+
+    }
 }

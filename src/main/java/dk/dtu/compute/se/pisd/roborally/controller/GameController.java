@@ -81,7 +81,7 @@ public class GameController {
                 }
                 for (int j = 0; j < Player.NO_CARDS; j++) {
                     CommandCardField field = player.getCardField(j);
-                    field.setCard(generateRandomCommandCard());
+                    field.setCard(player.drawCardFromProgrammingPile());
                     field.setVisible(true);
                 }
             }
@@ -207,7 +207,9 @@ public class GameController {
                         board.setStep(step);
                         board.setCurrentPlayer(board.getPlayer(0));
                     } else {
-
+                        for(Player player : board.getPlayers()){
+                            player.addAllToDiscardPile();
+                        }
                         startProgrammingPhase();
                     }
                     /* we repeat for every player in order of turn, and once the activation phase for
