@@ -48,7 +48,7 @@ public class Player extends Subject {
 
     private String name;
     private String color;
-
+    private PlayerState state;
     private Space space;
     private Heading heading = SOUTH;
 
@@ -66,6 +66,7 @@ public class Player extends Subject {
         this.checkpointsReached = 0;
         this.space = null;
         this.energyCubes = 5;
+        this.state = PlayerState.NORMAL;
         this.discardPile = new ArrayList<>();
         this.programmingPile = new ArrayList<>(Arrays.asList(
                 new CommandCard(Command.FORWARD),
@@ -230,5 +231,13 @@ public class Player extends Subject {
 
     public List<CommandCard> getDiscardPile() {
         return discardPile;
+    }
+
+    public void setState(PlayerState state) {
+        this.state = state;
+    }
+
+    public PlayerState getState() {
+        return state;
     }
 }

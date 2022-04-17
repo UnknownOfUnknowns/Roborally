@@ -25,6 +25,7 @@ import com.sun.javafx.sg.prism.NGRectangle;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.BoardElement;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.EnergySpace;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.RebootToken;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -158,6 +159,23 @@ public class GameController {
         return false;
     }
 
+    private void handleDamagedPlayer(Player player){
+        Space rebootToken = board.getRebootToken();
+        if(rebootToken.getBoardElement() != null && rebootToken.getBoardElement().getClass() == RebootToken.class){
+            RebootToken token = (RebootToken) rebootToken.getBoardElement();
+            if(rebootToken.getPlayer() != null){
+                Player playerOnSpace = rebootToken.getPlayer();
+                try {
+                    moveToSpace(playerOnSpace, board.getNeighbour(playerOnSpace.getSpace(), token.getHeading()), token.getHeading());
+                }catch (ImpossibleMoveException e){
+                    e.printStackTrace();
+                }
+            }
+            //moveToSpace cannot be used since the player should not move directly to a neighbouring space
+            player.setSpace(rebootToken);
+        }
+    }
+
     // XXX: V2
     /**
      * @author s215705
@@ -200,7 +218,11 @@ public class GameController {
                         BoardElement element = player.getSpace().getBoardElement();
                         if(element != null)
                             element.interact(player);
+                        if(player.getState() == PlayerState.DAMAGED){
+                            handleDamagedPlayer(player);
+                        }
                     }
+
                     step++;
                     if (step < Player.NO_REGISTERS) {
                         makeProgramFieldsVisible(step);

@@ -22,6 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.model;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.RebootToken;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -190,6 +191,17 @@ public class Board extends Subject {
     }
 
     /**
+     * @return Space because the space need not be a reboot token if the course does not have one, such as the start course
+     * */
+    public Space getRebootToken(){
+        for(Space[] x : spaces)
+            for(Space y : x)
+                if(y.getBoardElement() != null && y.getBoardElement().getClass() == RebootToken.class)
+                    return y;
+        return spaces[0][0];
+    }
+
+    /**
      * Returns the neighbour of the given space of the board in the given heading.
      * The neighbour is returned only, if it can be reached from the given space
      * (no walls or obstacles in either of the involved spaces); otherwise,
@@ -255,6 +267,5 @@ public class Board extends Subject {
                 ", Player = " + getCurrentPlayer().getName() +
                 ", Moves = " + getCounter();
     }
-
 
 }
