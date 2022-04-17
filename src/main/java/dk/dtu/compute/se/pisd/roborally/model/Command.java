@@ -46,6 +46,11 @@ public enum Command {
     BACK_UP("Back 1"),
     AGAIN("Again"),
 
+    SPAM("SPAM"),
+    TROJAN_HORSE("TROJAN HORSE"),
+    WORM("WORM"),
+    VIRUS("VIRUS"),
+
     // XXX Assignment V3
     OPTION_LEFT_RIGHT("Left OR Right", LEFT, RIGHT);
 
