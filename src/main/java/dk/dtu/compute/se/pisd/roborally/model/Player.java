@@ -223,4 +223,12 @@ public class Player extends Subject {
         }
 
     }
+
+    public List<CommandCard> getProgrammingPile() {
+        return programmingPile;
+    }
+
+    public List<CommandCard> getDiscardPile() {
+        return discardPile;
+    }
 }

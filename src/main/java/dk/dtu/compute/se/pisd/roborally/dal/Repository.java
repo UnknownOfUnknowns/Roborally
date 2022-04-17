@@ -70,6 +70,8 @@ class Repository implements IRepository {
 
 	public static final String COMMAND_CARD_INDEX = "cardIndex";
 
+	public static final String[] COMMAND_CARD_PILES =  new String[]{"HAND", "PROGRAMMING", "STACK", "DISCARD"};
+
 	final public static int NO_HAND_CARDS = 8;
 
 	final public static int NO_PROGRAMMING_CARDS = 5;
@@ -304,6 +306,26 @@ class Repository implements IRepository {
 		rs.close();
 	}
 
+	private int getPileSize(String pileName, Player player){
+		switch (pileName){
+			case "HAND" -> {return NO_HAND_CARDS;}
+			case "PROGRAMMING" -> {return NO_PROGRAMMING_CARDS;}
+			case "STACK" -> {return player.getProgrammingPile().size();}
+			case "DISCARD" -> {return player.getDiscardPile().size();}
+			default -> {return 0;}
+		}
+	}
+
+	private CommandCard getCommandCard(String pileName, Player player, int index){
+		switch (pileName){
+			case "HAND" -> {return player.getCardField(index).getCard();}
+			case "PROGRAMMING" -> {return player.getProgramField(index).getCard();}
+			case "STACK" -> {return player.getProgrammingPile().get(index);}
+			case "DISCARD" -> {return player.getDiscardPile().get(index);}
+			default -> {throw new IllegalArgumentException();}
+		}
+	}
+
 	private void createCommandCardsInDB(Board game) throws SQLException {
 		PreparedStatement ps = getSelectCommandCardsStatementU();
 		ps.setInt(1, game.getGameId());
@@ -311,32 +333,23 @@ class Repository implements IRepository {
 		ResultSet rs = ps.executeQuery();
 		for (int i = 0; i < game.getPlayersNumber(); i++) {
 			Player player = game.getPlayer(i);
-			for(int j = 0; j < NO_HAND_CARDS; j++){
-				rs.moveToInsertRow();
-				rs.updateInt(PLAYER_GAMEID, game.getGameId());
-				rs.updateInt(PLAYER_PLAYERID, i);
-				String commandName = "null";
-				if(player.getCardField(j).getCard() != null){
-					commandName = player.getCardField(j).getCard().command.displayName;
+			for(String pile : COMMAND_CARD_PILES){
+				for(int j = 0; j < getPileSize(pile, player); j++){
+					rs.moveToInsertRow();
+					rs.updateInt(PLAYER_GAMEID, game.getGameId());
+					rs.updateInt(PLAYER_PLAYERID, i);
+					String commandName = "null";
+					CommandCard card = getCommandCard(pile, player, j);
+					if(card != null){
+						commandName = card.command.displayName;
+					}
+					rs.updateString(COMMAND_COMMAND, commandName);
+					rs.updateString(COMMAND_FIELD_TYPE, pile);
+					rs.updateInt(COMMAND_CARD_INDEX, j);
+					rs.insertRow();
 				}
-				rs.updateString(COMMAND_COMMAND, commandName);
-				rs.updateString(COMMAND_FIELD_TYPE, "HAND");
-				rs.updateInt(COMMAND_CARD_INDEX, j);
-				rs.insertRow();
 			}
-			for(int j = 0; j < NO_PROGRAMMING_CARDS; j++){
-				rs.moveToInsertRow();
-				rs.updateInt(PLAYER_GAMEID, game.getGameId());
-				rs.updateInt(PLAYER_PLAYERID, i);
-				String commandName = "null";
-				if(player.getProgramField(j).getCard() != null){
-					commandName = player.getProgramField(j).getCard().command.displayName;
-				}
-				rs.updateString(COMMAND_COMMAND, commandName);
-				rs.updateString(COMMAND_FIELD_TYPE, "PROGRAMMING");
-				rs.updateInt(COMMAND_CARD_INDEX, j);
-				rs.insertRow();
-			}
+
 		}
 		rs.close();
 	}
@@ -371,6 +384,27 @@ class Repository implements IRepository {
 		}
 		rs.close();
 	}
+
+	private void setCommandCard(String pileName, Player player, int index, Command c) {
+		CommandCard card = new CommandCard(c);
+		switch (pileName) {
+			case "HAND" -> {
+				player.getCardField(index).setCard(card);
+			}
+			case "PROGRAMMING" -> {
+				player.getProgramField(index).setCard(card);
+			}
+			case "STACK" -> {
+				player.getProgrammingPile().add(index, card);
+			}
+			case "DISCARD" -> {
+				player.getDiscardPile().add(index, card);
+			}
+			default -> {
+				throw new IllegalArgumentException();
+			}
+		}
+	}
 	private void loadCommandCardsFromDB(Board game) throws SQLException {
 		PreparedStatement ps = getSelectCommandCardsStatementU();
 		ps.setInt(1, game.getGameId());
@@ -396,11 +430,8 @@ class Repository implements IRepository {
 			if(command == null)
 				continue;
 
-			if(fieldType.equals("PROGRAMMING")){
-				player.getProgramField(cardIndex).setCard(new CommandCard(command));
-			}else {
-				player.getCardField(cardIndex).setCard(new CommandCard(command));
-			}
+			setCommandCard(fieldType, player, cardIndex, command);
+
 		}
 		rs.close();
 	}
@@ -435,11 +466,10 @@ class Repository implements IRepository {
 			int playerId = rs.getInt(PLAYER_PLAYERID);
 			String fieldType = rs.getString(COMMAND_FIELD_TYPE);
 			int cardIndex = rs.getInt(COMMAND_CARD_INDEX);
-			CommandCardField commandCardField = fieldType.equals("HAND") ?
-					game.getPlayer(playerId).getCardField(cardIndex) : game.getPlayer(playerId).getProgramField(cardIndex);
+			CommandCard commandCard = getCommandCard(fieldType, game.getPlayer(playerId), cardIndex);
 			String commandName = "null";
-			if(commandCardField.getCard() != null)
-				commandName = commandCardField.getCard().command.displayName;
+			if(commandCard != null)
+				commandName = commandCard.command.displayName;
 			rs.updateString(COMMAND_COMMAND, commandName);
 			rs.updateRow();
 		}
