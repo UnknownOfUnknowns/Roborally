@@ -50,7 +50,7 @@ public class PlayerView extends Tab implements ViewObserver {
     private GridPane programPane;
     private Label cardsLabel;
     private GridPane cardsPane;
-
+   private Label checkPoint;
     private CardFieldView[] programCardViews;
     private CardFieldView[] cardViews;
 
@@ -59,6 +59,7 @@ public class PlayerView extends Tab implements ViewObserver {
     private Button finishButton;
     private Button executeButton;
     private Button stepButton;
+
 
     private VBox playerInteractionPanel;
 
@@ -75,6 +76,7 @@ public class PlayerView extends Tab implements ViewObserver {
         this.player = player;
 
         programLabel = new Label("Program");
+        checkPoint=new Label("checkpoints reached: " + player.getCheckpointsReached());
 
         programPane = new GridPane();
         programPane.setVgap(2.0);
@@ -122,7 +124,7 @@ public class PlayerView extends Tab implements ViewObserver {
                 cardsPane.add(cardViews[i], i, 0);
             }
         }
-
+        top.getChildren().add(checkPoint);
         top.getChildren().add(programLabel);
         top.getChildren().add(programPane);
         top.getChildren().add(cardsLabel);
