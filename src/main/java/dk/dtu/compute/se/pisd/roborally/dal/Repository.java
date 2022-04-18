@@ -317,12 +317,26 @@ class Repository implements IRepository {
 	}
 
 	private CommandCard getCommandCard(String pileName, Player player, int index){
-		switch (pileName){
-			case "HAND" -> {return player.getCardField(index).getCard();}
-			case "PROGRAMMING" -> {return player.getProgramField(index).getCard();}
-			case "STACK" -> {return player.getProgrammingPile().get(index);}
-			case "DISCARD" -> {return player.getDiscardPile().get(index);}
-			default -> {throw new IllegalArgumentException();}
+		try {
+			switch (pileName) {
+				case "HAND" -> {
+					return player.getCardField(index).getCard();
+				}
+				case "PROGRAMMING" -> {
+					return player.getProgramField(index).getCard();
+				}
+				case "STACK" -> {
+					return player.getProgrammingPile().get(index);
+				}
+				case "DISCARD" -> {
+					return player.getDiscardPile().get(index);
+				}
+				default -> {
+					throw new IllegalArgumentException();
+				}
+			}
+		} catch (NullPointerException e){
+			return null;
 		}
 	}
 

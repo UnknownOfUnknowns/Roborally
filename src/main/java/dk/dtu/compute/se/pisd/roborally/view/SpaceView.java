@@ -209,6 +209,11 @@ public class SpaceView extends StackPane implements ViewObserver {
         number.setBoundsType(TextBoundsType.VISUAL);
         pane.getChildren().addAll(energyCube, number);
         this.getChildren().add(pane);
-    }
+        } else if(element.getClass() == Pit.class){
+            this.setStyle("-fx-background-color: gray;");
+        } else if(element.getClass() == RebootToken.class){
+            RebootToken rebootToken = (RebootToken) element;
+            setStyle("-fx-background-color: green");
+        }
     }
 }

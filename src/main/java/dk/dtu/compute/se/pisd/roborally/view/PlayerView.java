@@ -206,11 +206,6 @@ the default background for the programming phase.
                 playerInteractionPanel.getChildren().clear();
 
                 if (player.board.getCurrentPlayer() == player) {
-                    // TODO Assignment V3: these buttons should be shown only when there is
-                    //      an interactive command card, and the buttons should represent
-                    //      the player's choices of the interactive command card. The
-                    //      following is just a mockup showing two options
-
                     Command command = player.getProgramField(player.board.getStep()).getCard().command;
                     if(command != null) {
                         if (command.isInteractive()) {

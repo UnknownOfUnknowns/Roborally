@@ -211,6 +211,10 @@ public class Player extends Subject {
         discardPile.add(commandCard);
     }
 
+    public void addToDiscardPile(List<CommandCard> commandCards){
+        discardPile.addAll(commandCards);
+    }
+
     public void addAllToDiscardPile() {
         for(CommandCardField field : program){
             if(field.getCard() != null)
@@ -240,4 +244,6 @@ public class Player extends Subject {
     public PlayerState getState() {
         return state;
     }
+
+
 }

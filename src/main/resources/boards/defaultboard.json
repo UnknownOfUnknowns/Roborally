@@ -216,6 +216,30 @@
       ],
       "x": 7,
       "y": 7
+    },
+    {
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.Pit",
+          "INSTANCE": {
+
+          }
+        }
+      ],
+      "x": 6,
+      "y": 1
+    },
+    {
+      "actions": [
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.RebootToken",
+          "INSTANCE": {
+            "heading": "SOUTH"
+          }
+        }
+      ],
+      "x": 6,
+      "y": 2
     }
   ]
 }

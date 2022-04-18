@@ -25,10 +25,7 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.RebootToken;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
 
@@ -58,7 +55,7 @@ public class Board extends Subject {
     private Phase phase = INITIALISATION;
 
     //Keeps track of the different damage cards in the "bank"
-    private Map<CommandCard, Integer> damageCards;
+    private Map<Command, Integer> damageCards;
     private int step = 0;
 
     private int counter = 0;
@@ -80,10 +77,10 @@ public class Board extends Subject {
         }
         this.damageCards = new HashMap<>();
         //TODO the different number of cards in each category should be revised
-        damageCards.put(new CommandCard(Command.SPAM), 36);
-        damageCards.put(new CommandCard(Command.TROJAN_HORSE), 15);
-        damageCards.put(new CommandCard(Command.WORM), 10);
-        damageCards.put(new CommandCard(Command.VIRUS), 10);
+        damageCards.put(Command.SPAM, 36);
+        damageCards.put(Command.TROJAN_HORSE, 15);
+        damageCards.put(Command.WORM, 10);
+        damageCards.put(Command.VIRUS, 10);
         this.CHECKPOINTS = 0;
         this.stepMode = false;
     }
@@ -266,6 +263,22 @@ public class Board extends Subject {
         notifyChange();
     }
 
+    public List<CommandCard> drawDamageCards(Command command, int ammount){
+        for(Map.Entry<Command, Integer> entry: damageCards.entrySet()){
+            if(entry.getKey().equals(command) && entry.getValue() >= ammount){
+                entry.setValue(entry.getValue()-ammount);
+                ArrayList<CommandCard> result = new ArrayList<>();
+                for(int i = 0; i < ammount; i++)
+                    result.add(new CommandCard(command));
+                return result;
+            }
+        }
+        return null;
+    }
+    public int getAmountOfDamageCard(Command command){
+        int i = damageCards.get(command);
+        return i;
+    }
     public String getStatusMessage() {
         // this is actually a view aspect, but for making assignment V1 easy for
         // the students, this method gives a string representation of the current

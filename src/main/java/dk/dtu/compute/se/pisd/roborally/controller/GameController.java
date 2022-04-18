@@ -21,12 +21,12 @@
  */
 package dk.dtu.compute.se.pisd.roborally.controller;
 
-import com.sun.javafx.sg.prism.NGRectangle;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.BoardElement;
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.EnergySpace;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.RebootToken;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * ...
@@ -173,6 +173,16 @@ public class GameController {
             }
             //moveToSpace cannot be used since the player should not move directly to a neighbouring space
             player.setSpace(rebootToken);
+            int amountOfSpam = board.getAmountOfDamageCard(Command.SPAM);
+            if(amountOfSpam >= 2) {
+                List<CommandCard> cards = board.drawDamageCards(Command.SPAM, 2);
+                player.addToDiscardPile(cards);
+            } else {
+                //TODO here the player should be able to choose which cards to draw instead
+                player.addToDiscardPile(board.drawDamageCards(Command.SPAM, amountOfSpam));
+            }
+            player.addAllToDiscardPile();
+            player.setState(PlayerState.NORMAL);
         }
     }
 
@@ -201,8 +211,14 @@ public class GameController {
                     }else{
                         executeCommand(currentPlayer, card.command);
                     }
-
+                    if(card.command == Command.SPAM || card.command == Command.TROJAN_HORSE || card.command == Command.WORM
+                        || card.command == Command.VIRUS){
+                        currentPlayer.addToDiscardPile(card);
+                        currentPlayer.getProgramField(step).setCard(null);
+                    }
                 }
+
+
                 if(winnerFound())
                     return;
                   /* if the activation phase is active, the steps of the players are executed.
