@@ -38,4 +38,22 @@ public enum Heading {
     public Heading prev() {
         return values()[(this.ordinal() + values().length - 1) % values().length];
     }
+
+    public Heading opposite(){
+        switch (this){
+            case SOUTH -> {
+                return NORTH;
+            }
+            case NORTH -> {
+                return SOUTH;
+            }
+            case EAST -> {
+                return WEST;
+            }
+            case WEST -> {
+                return EAST;
+            }
+        }
+        return null;
+    }
 }

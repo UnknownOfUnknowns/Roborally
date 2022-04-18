@@ -1,14 +1,11 @@
 package dk.dtu.compute.se.pisd.roborally.model.boardElements;
 
-import dk.dtu.compute.se.pisd.roborally.model.Player;
-import dk.dtu.compute.se.pisd.roborally.model.PlayerState;
-import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
-import dk.dtu.compute.se.pisd.roborally.model.Heading;
 
-public class BoardLaser implements BoardElement {
+public class BoardLaser extends Laser implements BoardElement {
 
     private Heading shotDirection;
     private int laserCount;
@@ -18,9 +15,14 @@ public class BoardLaser implements BoardElement {
         this.laserCount = laserCount;
     }
 
+
+    public void fire(Space from) {
+        super.fire(from, shotDirection);
+    }
+
     @Override
     public void interact(Player player) {
-        player.setState(PlayerState.DAMAGED);
+
     }
 
     public Heading getShotDirection() {
