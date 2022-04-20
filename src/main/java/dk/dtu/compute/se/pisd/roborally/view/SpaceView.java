@@ -199,16 +199,16 @@ public class SpaceView extends StackPane implements ViewObserver {
             pane.getChildren().addAll(circle, number);
             this.getChildren().add(pane);
         } else if(element.getClass() == EnergySpace.class){
-        EnergySpace energySpace = (EnergySpace) element;
-        Polygon energyCube = new Polygon( 5.0,5.0, SPACE_WIDTH-5.0, 5.0, SPACE_WIDTH-5.0, SPACE_HEIGHT-5.0, 5.0, SPACE_HEIGHT-5.0);
-        if(energySpace.getEnergyCubes() > 0)
-            energyCube.setFill(Color.ORANGE);
-        else
-            energyCube.setFill(Color.LIGHTYELLOW);
-        Text number = new Text(String.valueOf(energySpace.getEnergyCubes()));
-        number.setBoundsType(TextBoundsType.VISUAL);
-        pane.getChildren().addAll(energyCube, number);
-        this.getChildren().add(pane);
+            EnergySpace energySpace = (EnergySpace) element;
+            Polygon energyCube = new Polygon( 5.0,5.0, SPACE_WIDTH-5.0, 5.0, SPACE_WIDTH-5.0, SPACE_HEIGHT-5.0, 5.0, SPACE_HEIGHT-5.0);
+            if(energySpace.getEnergyCubes() > 0)
+                energyCube.setFill(Color.ORANGE);
+            else
+                energyCube.setFill(Color.LIGHTYELLOW);
+            Text number = new Text(String.valueOf(energySpace.getEnergyCubes()));
+            number.setBoundsType(TextBoundsType.VISUAL);
+            pane.getChildren().addAll(energyCube, number);
+            this.getChildren().add(pane);
         } else if(element.getClass() == Pit.class){
             this.setStyle("-fx-background-color: gray;");
         } else if(element.getClass() == RebootToken.class){
