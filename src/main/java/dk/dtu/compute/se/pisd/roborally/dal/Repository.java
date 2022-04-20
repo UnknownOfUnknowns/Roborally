@@ -341,7 +341,7 @@ class Repository implements IRepository {
 	}
 
 	private void createCommandCardsInDB(Board game) throws SQLException {
-		PreparedStatement ps = getSelectCommandCardsStatementU();
+		PreparedStatement ps = getSelectCommandCardsStatementOrderedByIndex();
 		ps.setInt(1, game.getGameId());
 
 		ResultSet rs = ps.executeQuery();
@@ -399,6 +399,12 @@ class Repository implements IRepository {
 		rs.close();
 	}
 
+	/**
+	 * Sets the commandCards into the appropriate pile. The programming and discard pile do not make use of the index
+	 * since the size of these is zero from the beginning. The order is still maintained in these if the functions is called
+	 * in the order the cards are in. It should be noted that the order of the mentioned piles is irrelevant since the programming
+	 * pile is shuffled and not visible for the user, while the discard is shuffled into the programming pile.
+	 * */
 	private void setCommandCard(String pileName, Player player, int index, Command c) {
 		CommandCard card = new CommandCard(c);
 		switch (pileName) {
@@ -409,18 +415,23 @@ class Repository implements IRepository {
 				player.getProgramField(index).setCard(card);
 			}
 			case "STACK" -> {
-				player.getProgrammingPile().add(index, card);
+				player.getProgrammingPile().add(card);
 			}
 			case "DISCARD" -> {
-				player.getDiscardPile().add(index, card);
+				player.getDiscardPile().add(card);
 			}
 			default -> {
 				throw new IllegalArgumentException();
 			}
 		}
 	}
+	/**
+	 * Updates the commandCards by first deleting them. This is easier since the discard pile and the drawing pile is
+	 * of variable length
+	 * */
+
 	private void loadCommandCardsFromDB(Board game) throws SQLException {
-		PreparedStatement ps = getSelectCommandCardsStatementU();
+		PreparedStatement ps = getSelectCommandCardsStatementOrderedByIndex();
 		ps.setInt(1, game.getGameId());
 
 		ResultSet rs = ps.executeQuery();
@@ -472,22 +483,11 @@ class Repository implements IRepository {
 	}
 
 	private void updateCommandCardsInDB(Board game) throws SQLException {
-		PreparedStatement ps = getSelectCommandCardsStatementU();
+		PreparedStatement ps = deleteCommandCardsStatement();
 		ps.setInt(1, game.getGameId());
 
-		ResultSet rs = ps.executeQuery();
-		while (rs.next()) {
-			int playerId = rs.getInt(PLAYER_PLAYERID);
-			String fieldType = rs.getString(COMMAND_FIELD_TYPE);
-			int cardIndex = rs.getInt(COMMAND_CARD_INDEX);
-			CommandCard commandCard = getCommandCard(fieldType, game.getPlayer(playerId), cardIndex);
-			String commandName = "null";
-			if(commandCard != null)
-				commandName = commandCard.command.displayName;
-			rs.updateString(COMMAND_COMMAND, commandName);
-			rs.updateRow();
-		}
-		rs.close();
+		ps.execute();
+		createCommandCardsInDB(game);
 	}
 
 	private static final String SQL_INSERT_GAME =
@@ -552,7 +552,7 @@ class Repository implements IRepository {
 		return select_players_stmt;
 	}
 
-	private static final String SQL_SELECT_COMMAND_CARDS = "SELECT * FROM CommandCard WHERE gameID = ?";
+	private static final String SQL_SELECT_COMMAND_CARDS = "SELECT * FROM CommandCard WHERE gameID = ? ORDER BY cardIndex";
 
 	private PreparedStatement select_command_cards_statement = null;
 	/**
@@ -560,7 +560,7 @@ class Repository implements IRepository {
 	 * This method returns a statement that can be executed to find the commandcards of a game
 	 * @return PreparedStatement
 	 * */
-	private PreparedStatement getSelectCommandCardsStatementU(){
+	private PreparedStatement getSelectCommandCardsStatementOrderedByIndex(){
 		if(select_command_cards_statement == null){
 			Connection connection = connector.getConnection();
 			try {
@@ -574,6 +574,26 @@ class Repository implements IRepository {
 			}
 		}
 		return select_command_cards_statement;
+	}
+
+
+	public static final String SQL_DELETE_COMMAND_CARDS = "DELETE FROM CommandCard WHERE gameID = ?";
+	private PreparedStatement delete_command_cards_statement = null;
+
+	private PreparedStatement deleteCommandCardsStatement(){
+		if(delete_command_cards_statement == null){
+			Connection connection = connector.getConnection();
+			try {
+				delete_command_cards_statement = connection.prepareStatement(
+						SQL_DELETE_COMMAND_CARDS,
+						ResultSet.TYPE_FORWARD_ONLY,
+						ResultSet.CONCUR_UPDATABLE);
+			} catch (SQLException e) {
+				//TODO add error handling
+				e.printStackTrace();
+			}
+		}
+		return delete_command_cards_statement;
 	}
 
 	private static final String SQL_SELECT_PLAYERS_ASC =

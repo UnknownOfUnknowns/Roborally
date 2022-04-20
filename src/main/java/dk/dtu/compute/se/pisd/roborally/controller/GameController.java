@@ -301,11 +301,14 @@ public class GameController {
         case AGAIN:
             again(player, command);
             break;
+        case SPAM:
+            spam(player);
+            break;
         default:
             // DO NOTHING (for now)
+        }
     }
 }
-        }
 
     /**
      * @author s215705
@@ -337,6 +340,17 @@ public class GameController {
         }
         player.setSpace(space);
     }
+
+
+
+
+    public void spam(@NotNull Player player){
+        if(player != null){
+            CommandCard card = player.getProgramField(0).getCard();
+            executeCommand(player, card.command);
+        }
+    }
+
     /**
      * @author s215722
      * */
@@ -470,6 +484,28 @@ public class GameController {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public void fireLaser(Space from, Heading direction){
+        if(from != null) {
+            if (from.getPlayer() != null) {
+                Player player = from.getPlayer();
+                player.setState(PlayerState.DAMAGED);
+            } else {
+                Space to = from.board.getNeighbour(from, direction);
+
+                if (to != null) {
+                    List<Heading> walls = to.getWalls();
+                    if (walls != null) {
+                        if(walls.contains(direction.opposite()))
+                            return;
+                    } else if(from.getWalls().contains(direction))
+                        return;
+                    else
+                        fireLaser(to, direction);
+                }
+            }
         }
     }
 

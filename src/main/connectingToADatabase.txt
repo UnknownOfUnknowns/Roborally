@@ -1,0 +1,2 @@
+When first installing the game make sure to change the static variables in Connector.java
+to whatever values you have in your database.
