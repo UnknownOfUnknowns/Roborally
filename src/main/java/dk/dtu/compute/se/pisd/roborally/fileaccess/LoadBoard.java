@@ -80,7 +80,7 @@ public class LoadBoard {
                         space.setWalls(spaceTemplate.walls);
                         BoardElement element = spaceTemplate.actions.get(0);
                         space.setBoardElement(element);
-                        if(element.getClass() == Checkpoint.class){
+                        if(element instanceof Checkpoint){
                             Checkpoint checkpoint = (Checkpoint) element;
                             if(checkpoint.getNumber() > board.getCheckpoints()){
                                 board.setCheckpoints(checkpoint.getNumber());

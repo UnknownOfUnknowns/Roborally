@@ -203,7 +203,7 @@ public class Board extends Subject {
     public Space getRebootToken(){
         for(Space[] x : spaces)
             for(Space y : x)
-                if(y.getBoardElement() != null && y.getBoardElement().getClass() == RebootToken.class)
+                if(y.getBoardElement() != null && y.getBoardElement() instanceof RebootToken)
                     return y;
         return spaces[0][0];
     }

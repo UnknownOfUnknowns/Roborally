@@ -161,7 +161,7 @@ public class GameController {
 
     private void handleDamagedPlayer(Player player){
         Space rebootToken = board.getRebootToken();
-        if(rebootToken.getBoardElement() != null && rebootToken.getBoardElement().getClass() == RebootToken.class){
+        if(rebootToken.getBoardElement() != null && rebootToken.getBoardElement() instanceof RebootToken){
             RebootToken token = (RebootToken) rebootToken.getBoardElement();
             if(rebootToken.getPlayer() != null){
                 Player playerOnSpace = rebootToken.getPlayer();

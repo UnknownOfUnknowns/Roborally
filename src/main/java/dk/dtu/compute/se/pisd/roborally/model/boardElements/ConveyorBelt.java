@@ -18,7 +18,7 @@ public class ConveyorBelt implements BoardElement{
         Space newSpace = player.board.getNeighbour(player.getSpace(), heading);
         if(newSpace.getPlayer() == null){
             player.setSpace(newSpace);
-            if(newSpace.getBoardElement() != null && newSpace.getBoardElement().getClass() != ConveyorBelt.class){
+            if(newSpace.getBoardElement() != null && newSpace.getBoardElement() instanceof ConveyorBelt){
                 newSpace.getBoardElement().interact(player);
             }
         }

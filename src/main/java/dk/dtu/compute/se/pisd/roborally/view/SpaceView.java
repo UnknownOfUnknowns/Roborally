@@ -168,7 +168,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         pane.getChildren().add(rectangle);
         BoardElement element = space.getBoardElement();
 
-        if(element.getClass() == Gear.class){
+        if(element instanceof Gear){
             Gear concreteElement = (Gear) element;
             Circle circle = new Circle(10);
             if(concreteElement.getTurnDirection().equals(TurnDirection.LEFT))
@@ -178,7 +178,7 @@ public class SpaceView extends StackPane implements ViewObserver {
             circle.setCenterX(SPACE_WIDTH/2.0);
             circle.setCenterY(SPACE_HEIGHT/2.0);
             pane.getChildren().add(circle);
-        }else if(element.getClass() == ConveyorBelt.class){
+        }else if(element instanceof ConveyorBelt){
             ConveyorBelt concreteElement = (ConveyorBelt) element;
             ConveyerBeltComponent belt = new ConveyerBeltComponent(SPACE_WIDTH, SPACE_HEIGHT);
             switch (concreteElement.getDirection()){
@@ -187,7 +187,7 @@ public class SpaceView extends StackPane implements ViewObserver {
                 case NORTH -> belt.setRotate(-90);
             }
             getChildren().add(belt);
-        } else if(element.getClass() == Checkpoint.class){
+        } else if(element instanceof Checkpoint){
             Checkpoint checkpoint = (Checkpoint) element;
             Circle circle = new Circle(10);
             circle.setFill(Color.YELLOW);
@@ -196,7 +196,7 @@ public class SpaceView extends StackPane implements ViewObserver {
             circle.setCenterY(SPACE_WIDTH/2.0);
             circle.setCenterX(SPACE_HEIGHT/2.0);
             pane.getChildren().addAll(circle, number);
-        } else if(element.getClass() == EnergySpace.class){
+        } else if(element instanceof EnergySpace){
             EnergySpace energySpace = (EnergySpace) element;
             Polygon energyCube = new Polygon( 5.0,5.0, SPACE_WIDTH-5.0, 5.0, SPACE_WIDTH-5.0, SPACE_HEIGHT-5.0, 5.0, SPACE_HEIGHT-5.0);
             if(energySpace.getEnergyCubes() > 0)
@@ -207,9 +207,9 @@ public class SpaceView extends StackPane implements ViewObserver {
             number.setBoundsType(TextBoundsType.VISUAL);
             pane.getChildren().addAll(energyCube, number);
 
-        } else if(element.getClass() == Pit.class){
+        } else if(element instanceof Pit){
             this.setStyle("-fx-background-color: gray;");
-        } else if(element.getClass() == RebootToken.class){
+        } else if(element instanceof RebootToken){
             RebootToken rebootToken = (RebootToken) element;
             setStyle("-fx-background-color: green");
 

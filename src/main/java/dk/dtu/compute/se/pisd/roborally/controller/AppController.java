@@ -144,8 +144,11 @@ public class AppController implements Observer {
         if (gameController != null) {
 
             // here we save the game (without asking the user).
-            saveGame();
-
+            try {
+                saveGame();
+            }catch (Exception e){
+                //this is made such that the game can be stopped even though the connection to the database fails
+            }
             gameController = null;
             roboRally.createBoardView(null);
             return true;
