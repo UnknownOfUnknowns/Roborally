@@ -147,9 +147,9 @@ public class GameController {
     }
 
     private boolean winnerFound(){
-        if(board.CHECKPOINTS != 0){
+        if(board.getCheckpoints() != 0){
             for (Player player: board.getPlayers()) {
-                if(player.getCheckpointsReached() == board.CHECKPOINTS){
+                if(player.getCheckpointsReached() == board.getCheckpoints()){
                     board.setWinner(player);
                     board.setPhase(Phase.GAME_FINISHED);
                     return true;
@@ -219,8 +219,10 @@ public class GameController {
                 }
 
 
-                if(winnerFound())
+                if(winnerFound()) {
+                    board.setPhase(Phase.GAME_FINISHED);
                     return;
+                }
                   /* if the activation phase is active, the steps of the players are executed.
                     Once an interactive card is hit, we display the options, and then continue.
 

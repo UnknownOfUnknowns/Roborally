@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS Player (
   positionY int,
   heading tinyint,
 
+  checkpoints int,
+
   PRIMARY KEY (gameID, playerID),
   FOREIGN KEY (gameID) REFERENCES Game(gameID)
   ON DELETE CASCADE

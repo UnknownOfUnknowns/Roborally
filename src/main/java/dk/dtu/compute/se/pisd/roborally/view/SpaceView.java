@@ -178,14 +178,13 @@ public class SpaceView extends StackPane implements ViewObserver {
             circle.setCenterX(SPACE_WIDTH/2.0);
             circle.setCenterY(SPACE_HEIGHT/2.0);
             pane.getChildren().add(circle);
-            this.getChildren().add(pane);
         }else if(element.getClass() == ConveyorBelt.class){
             ConveyorBelt concreteElement = (ConveyorBelt) element;
             ConveyerBeltComponent belt = new ConveyerBeltComponent(SPACE_WIDTH, SPACE_HEIGHT);
             switch (concreteElement.getDirection()){
                 case SOUTH -> belt.setRotate(90);
                 case WEST -> belt.setRotate(180);
-                case NORTH -> setRotate(-90);
+                case NORTH -> belt.setRotate(-90);
             }
             getChildren().add(belt);
         } else if(element.getClass() == Checkpoint.class){
@@ -197,7 +196,6 @@ public class SpaceView extends StackPane implements ViewObserver {
             circle.setCenterY(SPACE_WIDTH/2.0);
             circle.setCenterX(SPACE_HEIGHT/2.0);
             pane.getChildren().addAll(circle, number);
-            this.getChildren().add(pane);
         } else if(element.getClass() == EnergySpace.class){
             EnergySpace energySpace = (EnergySpace) element;
             Polygon energyCube = new Polygon( 5.0,5.0, SPACE_WIDTH-5.0, 5.0, SPACE_WIDTH-5.0, SPACE_HEIGHT-5.0, 5.0, SPACE_HEIGHT-5.0);
@@ -208,12 +206,22 @@ public class SpaceView extends StackPane implements ViewObserver {
             Text number = new Text(String.valueOf(energySpace.getEnergyCubes()));
             number.setBoundsType(TextBoundsType.VISUAL);
             pane.getChildren().addAll(energyCube, number);
-            this.getChildren().add(pane);
+
         } else if(element.getClass() == Pit.class){
             this.setStyle("-fx-background-color: gray;");
         } else if(element.getClass() == RebootToken.class){
             RebootToken rebootToken = (RebootToken) element;
             setStyle("-fx-background-color: green");
+
+            Polygon polygon = new Polygon(0.0,0.0,SPACE_WIDTH,SPACE_HEIGHT/2.0,0.0,SPACE_WIDTH);
+            polygon.setFill(Color.BEIGE);
+            switch (rebootToken.getHeading()){
+                case SOUTH -> polygon.setRotate(90);
+                case WEST -> polygon.setRotate(180);
+                case NORTH -> polygon.setRotate(-90);
+            }
+            pane.getChildren().add(polygon);
         }
+        getChildren().add(pane);
     }
 }
