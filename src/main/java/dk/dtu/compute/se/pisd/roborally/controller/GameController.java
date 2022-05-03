@@ -34,10 +34,10 @@ import java.util.List;
  * @author Ekkart Kindler, ekki@dtu.dk
  *
  */
-public class GameController {
+public class GameController implements PlayerMover{
 
     final public Board board;
-
+    final public int CARDS_TO_BE_DRAWN_ON_REBOOT = 2;
     public GameController(@NotNull Board board) {
         this.board = board;
     }
@@ -92,13 +92,6 @@ public class GameController {
     }
 
     // XXX: V2
-    private CommandCard generateRandomCommandCard() {
-        Command[] commands = Command.values();
-        int random = (int) (Math.random() * commands.length);
-        return new CommandCard(commands[random]);
-    }
-
-    // XXX: V2
     public void finishProgrammingPhase() {
         makeProgramFieldsInvisible();
         makeProgramFieldsVisible(0);
@@ -147,7 +140,11 @@ public class GameController {
             executeNextStep();
         } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
     }
-
+    /**
+     * Iterates through the players to see if any of them has reached all checkpoints, if so the phase of the
+     * game is set to GAME_FINISHED
+     * @return has a player won
+     * */
     private boolean winnerFound(){
         if(board.getCheckpoints() != 0){
             for (Player player: board.getPlayers()) {
@@ -161,7 +158,11 @@ public class GameController {
         return false;
     }
 
+    /**
+     * Draws cards and puts the player onto the reboot token when the player has been damaged
+     * */
     private void handleDamagedPlayer(Player player){
+
         Space rebootToken = board.getRebootToken();
         if(rebootToken.getBoardElement() != null && rebootToken.getBoardElement() instanceof RebootToken){
             RebootToken token = (RebootToken) rebootToken.getBoardElement();
@@ -176,16 +177,52 @@ public class GameController {
             //moveToSpace cannot be used since the player should not move directly to a neighbouring space
             player.setSpace(rebootToken);
             int amountOfSpam = board.getAmountOfDamageCard(Command.SPAM);
-            if(amountOfSpam >= 2) {
-                List<CommandCard> cards = board.drawDamageCards(Command.SPAM, 2);
+            if(amountOfSpam >= CARDS_TO_BE_DRAWN_ON_REBOOT) {
+                List<CommandCard> cards = board.drawDamageCards(Command.SPAM, CARDS_TO_BE_DRAWN_ON_REBOOT);
                 player.addToDiscardPile(cards);
             } else {
                 //TODO here the player should be able to choose which cards to draw instead
                 player.addToDiscardPile(board.drawDamageCards(Command.SPAM, amountOfSpam));
+                player.setResidualCardDraw(CARDS_TO_BE_DRAWN_ON_REBOOT-amountOfSpam);
             }
+            board.setPhase(Phase.PLAYER_INTERACTION);
             player.addAllToDiscardPile();
-            player.setState(PlayerState.NORMAL);
         }
+    }
+    /**
+     * When the player has chosen which direction to face on reboot this function sets the state of the game back to normal
+     * */
+    public void endHandlingOfDamagedPlayer(Player player, Heading heading){
+        player.setHeading(heading);
+        board.setPhase(Phase.ACTIVATION);
+        player.setState(PlayerState.NORMAL);
+    }
+
+    private void startNewRound(){
+        int step = board.getStep();
+        for(Player player : board.getPlayers()){
+            BoardElement element = player.getSpace().getBoardElement();
+            if(element != null)
+                element.interact(player);
+            if(player.getState() == PlayerState.DAMAGED){
+                handleDamagedPlayer(player);
+            }
+        }
+
+        step++;
+        if (step < Player.NO_REGISTERS) {
+            makeProgramFieldsVisible(step);
+            board.setStep(step);
+            board.setCurrentPlayer(board.getPlayer(0));
+        } else {
+            for(Player player : board.getPlayers()){
+                player.addAllToDiscardPile();
+            }
+            startProgrammingPhase();
+        }
+                    /* we repeat for every player in order of turn, and once the activation phase for
+                    every player has been executed, we return to the programming phase
+                     */
     }
 
     // XXX: V2
@@ -210,53 +247,26 @@ public class GameController {
                             board.setPhase(Phase.PLAYER_INTERACTION);
                             return;
                         }
-                    }else{
-                        executeCommand(currentPlayer, card.command);
                     }
+                    executeCommand(currentPlayer, card.command);
+
                     if(card.command == Command.SPAM || card.command == Command.TROJAN_HORSE || card.command == Command.WORM
                         || card.command == Command.VIRUS){
-                        currentPlayer.addToDiscardPile(card);
+                        Integer numberOfCardsInPile = board.getDamageCards().get(card.command);
+                        board.getDamageCards().put(card.command, numberOfCardsInPile +1);
                         currentPlayer.getProgramField(step).setCard(null);
                     }
                 }
-
-
                 if(winnerFound()) {
                     board.setPhase(Phase.GAME_FINISHED);
                     return;
                 }
-                  /* if the activation phase is active, the steps of the players are executed.
-                    Once an interactive card is hit, we display the options, and then continue.
-
-                */
 
                 int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
                 if (nextPlayerNumber < board.getPlayersNumber()) {
                     board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
                 } else {
-                    for(Player player : board.getPlayers()){
-                        BoardElement element = player.getSpace().getBoardElement();
-                        if(element != null)
-                            element.interact(player);
-                        if(player.getState() == PlayerState.DAMAGED){
-                            handleDamagedPlayer(player);
-                        }
-                    }
-
-                    step++;
-                    if (step < Player.NO_REGISTERS) {
-                        makeProgramFieldsVisible(step);
-                        board.setStep(step);
-                        board.setCurrentPlayer(board.getPlayer(0));
-                    } else {
-                        for(Player player : board.getPlayers()){
-                            player.addAllToDiscardPile();
-                        }
-                        startProgrammingPhase();
-                    }
-                    /* we repeat for every player in order of turn, and once the activation phase for
-                    every player has been executed, we return to the programming phase
-                     */
+                    startNewRound();
                 }
             } else {
                 // this should not happen
@@ -314,40 +324,12 @@ public class GameController {
     }
 }
 
+
+
+
     /**
-     * @author s215705
-     * Moves a player to a space if it is legal otherwise ImpossibleMoveException is thrown
+     * Executes the first card of the program fields
      * */
-    private void moveToSpace(@NotNull Player player,
-                             @NotNull Space space,
-                             @NotNull Heading heading) throws ImpossibleMoveException{
-        Player playerOnSpace = space.getPlayer();
-        if(playerOnSpace != null){
-            Space nextSpace = board.getNeighbour(space, heading);
-            if(nextSpace != null){
-                moveToSpace(playerOnSpace, nextSpace, heading);
-            }else{
-                throw new ImpossibleMoveException(player, space, heading);
-            }
-        }
-        if(space.getWalls() != null) {
-            for (Heading head : space.getWalls()) {
-                if (board.getNeighbour(space, head).equals(player.getSpace()))
-                    throw new ImpossibleMoveException(player, space, heading);
-            }
-        }
-        if(player.getSpace().getWalls() != null) {
-            for (Heading head : player.getSpace().getWalls()) {
-                if (board.getNeighbour(player.getSpace(), head).equals(space))
-                    throw new ImpossibleMoveException(player, space, heading);
-            }
-        }
-        player.setSpace(space);
-    }
-
-
-
-
     public void spam(@NotNull Player player){
         if(player != null){
             CommandCard card = player.getProgramField(0).getCard();
@@ -441,7 +423,6 @@ public class GameController {
      * */
     public void executeCommandOptionAndContinue(Command option){
         Player currentPlayer = board.getCurrentPlayer();
-        int step = board.getStep();
         if(currentPlayer != null) {
             if (option != null)
                 executeCommand(currentPlayer, option);
@@ -451,14 +432,7 @@ public class GameController {
             if (nextPlayerNumber < board.getPlayersNumber()) {
                 board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
             } else {
-                step++;
-                if (step < Player.NO_REGISTERS) {
-                    makeProgramFieldsVisible(step);
-                    board.setStep(step);
-                    board.setCurrentPlayer(board.getPlayer(0));
-                } else {
-                    startProgrammingPhase();
-                }
+               startNewRound();
             }
         }
         if(!board.isStepMode())
@@ -478,9 +452,12 @@ public class GameController {
         CommandCard sourceCard = source.getCard();
         CommandCard targetCard = target.getCard();
         if (sourceCard != null && targetCard == null) {
-            // Make sure that again-cards cannot be put in the first programming field
+            // Make sure that again-cards and damageCards cannot be put in the first programming field
             for(int i = 0; i < board.getPlayersNumber(); i++){
-                if(sourceCard.command.equals(Command.AGAIN) && board.getPlayer(i).getProgramField(0) == target)
+                Command command= sourceCard.command;
+                if((command.equals(Command.AGAIN) || command.equals(Command.SPAM) ||
+                        command.equals(Command.TROJAN_HORSE) || command.equals(Command.WORM)
+                || command.equals(Command.VIRUS)) && board.getPlayer(i).getProgramField(0) == target)
                     return false;
             }
             target.setCard(sourceCard);

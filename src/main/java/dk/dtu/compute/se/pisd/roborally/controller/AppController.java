@@ -58,7 +58,10 @@ public class AppController implements Observer {
     public AppController(@NotNull RoboRally roboRally) {
         this.roboRally = roboRally;
     }
-
+    /**
+     * Creates a new game with the specified number of players and board type. Then saves it in the database. The function
+     * is also responsible for setting up the view of the board
+     * */
     public void newGame() {
         ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
         dialog.setTitle("Player number");
@@ -109,7 +112,10 @@ public class AppController implements Observer {
             RepositoryAccess.getRepository().updateGameInDB(gameController.board);
         }
     }
-
+    /**
+     * List the games in the database such that the user can load his game of choise.
+     * Also sets up the view and attaches AppController to board.
+     * */
     public void loadGame() {
 
         List<GameInDB> savedGames = RepositoryAccess.getRepository().getGames();
@@ -156,6 +162,10 @@ public class AppController implements Observer {
         }
         return false;
     }
+    /**
+     * Handles the process of shutting down a game. The application remains open.
+     * Automatically saves the game by calling stop game.
+     * */
 
     public void exit() {
         if (gameController != null) {
@@ -164,7 +174,7 @@ public class AppController implements Observer {
             alert.setContentText("Are you sure you want to exit RoboRally?");
             Optional<ButtonType> result = alert.showAndWait();
 
-            if (!result.isPresent() || result.get() != ButtonType.OK) {
+            if (result.isEmpty() || result.get() != ButtonType.OK) {
                 return; // return without exiting the application
             }
         }

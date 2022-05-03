@@ -24,6 +24,9 @@ package dk.dtu.compute.se.pisd.roborally.view;
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.*;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.RebootToken;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -32,7 +35,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ...
@@ -208,14 +213,40 @@ the default background for the programming phase.
                 playerInteractionPanel.getChildren().clear();
 
                 if (player.board.getCurrentPlayer() == player) {
-                    Command command = player.getProgramField(player.board.getStep()).getCard().command;
-                    if(command != null) {
+
+                    CommandCard commandCard = player.getProgramField(player.board.getStep()).getCard();
+                    //Handle interactive programming cards
+
+                    if(commandCard != null) {
+                        Command command = commandCard.command;
                         if (command.isInteractive()) {
                             showInteractiveProgrammingCard(command);
                         } else if(command.equals(Command.AGAIN)){
                             CommandCard prevCommandCard = player.getProgramField(player.board.getStep()-1).getCard();
                             if(prevCommandCard != null && prevCommandCard.command.isInteractive())
                                 showInteractiveProgrammingCard(prevCommandCard.command);
+                        }
+                    }
+                }
+                //Get input for the directing of the robot after reboot
+                if(player.getState() == PlayerState.DAMAGED && player.getSpace().getBoardElement() != null &&
+                        player.getSpace().getBoardElement() instanceof RebootToken){
+                    Heading chosenHeading = null;
+                    for(Heading heading : Heading.values()){
+                        Button optionButton = new Button(heading.name());
+                        optionButton.setOnAction(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent actionEvent) {
+
+                            }
+                        });
+                        optionButton.setDisable(false);
+                        playerInteractionPanel.getChildren().add(optionButton);
+                    }
+                    Map<Command, Integer> drawConfiguration = new HashMap<>();
+                    for(int i = 0; i < player.getResidualCardDraw(); i++){
+                        for(Map.Entry<Command, Integer> entry : player.board.getDamageCards().entrySet()){
+
                         }
                     }
                 }

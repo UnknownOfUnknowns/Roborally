@@ -1,5 +1,6 @@
 package dk.dtu.compute.se.pisd.roborally.model.boardElements;
 
+import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;

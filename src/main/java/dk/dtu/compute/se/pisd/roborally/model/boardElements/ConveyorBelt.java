@@ -1,12 +1,12 @@
 package dk.dtu.compute.se.pisd.roborally.model.boardElements;
 
-import dk.dtu.compute.se.pisd.roborally.model.Heading;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
-import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.controller.GameController;
+import dk.dtu.compute.se.pisd.roborally.model.*;
+
 /**
  * @author s215705
  * */
-public class ConveyorBelt implements BoardElement{
+public class ConveyorBelt implements BoardElement, PlayerMover {
     Heading heading;
 
     public ConveyorBelt(Heading heading){
@@ -17,9 +17,10 @@ public class ConveyorBelt implements BoardElement{
     public void interact(Player player) {
         Space newSpace = player.board.getNeighbour(player.getSpace(), heading);
         if(newSpace.getPlayer() == null){
-            player.setSpace(newSpace);
-            if(newSpace.getBoardElement() != null && newSpace.getBoardElement() instanceof ConveyorBelt){
-                newSpace.getBoardElement().interact(player);
+            try {
+                moveToSpace(player, newSpace, heading);
+            } catch (ImpossibleMoveException e) {
+                //If the move cannot be completed just dont do anything
             }
         }
     }
