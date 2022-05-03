@@ -86,7 +86,8 @@ public class AppController implements Observer {
             boardDialog.setHeaderText("Select number of players");
             Optional<String> boardResult = boardDialog.showAndWait();
 
-            Board board = LoadBoard.loadBoard(boardResult.get());
+            Board board;
+            board = boardResult.map(LoadBoard::loadBoard).orElseGet(() -> LoadBoard.loadBoard("defaultboard"));
             gameController = new GameController(board);
             int no = result.get();
             for (int i = 0; i < no; i++) {
@@ -144,8 +145,11 @@ public class AppController implements Observer {
         if (gameController != null) {
 
             // here we save the game (without asking the user).
-            saveGame();
-
+            try {
+                saveGame();
+            }catch (Exception e){
+                //this is made such that the game can be stopped even though the connection to the database fails
+            }
             gameController = null;
             roboRally.createBoardView(null);
             return true;

@@ -30,6 +30,7 @@ import dk.dtu.compute.se.pisd.roborally.fileaccess.model.SpaceTemplate;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.BoardElement;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.Checkpoint;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyorBelt;
 
 import javax.sound.midi.Soundbank;
@@ -72,13 +73,19 @@ public class LoadBoard {
 
             }
             if(boardTemplate != null) {
-                Board board = new Board(boardTemplate.width, boardTemplate.height);
+                Board board = new Board(boardTemplate.width, boardTemplate.height, boardname);
                 if (boardTemplate.spaces != null) {
                     for (SpaceTemplate spaceTemplate : boardTemplate.spaces) {
                         Space space = board.getSpace(spaceTemplate.x, spaceTemplate.y);
                         space.setWalls(spaceTemplate.walls);
                         BoardElement element = spaceTemplate.actions.get(0);
                         space.setBoardElement(element);
+                        if(element instanceof Checkpoint){
+                            Checkpoint checkpoint = (Checkpoint) element;
+                            if(checkpoint.getNumber() > board.getCheckpoints()){
+                                board.setCheckpoints(checkpoint.getNumber());
+                            }
+                        }
                     }
                 }
                 return board;

@@ -23,6 +23,7 @@ package dk.dtu.compute.se.pisd.roborally.dal;
 
 import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
 import dk.dtu.compute.se.pisd.roborally.model.*;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.Checkpoint;
 
 import java.lang.reflect.Field;
 import java.sql.*;
@@ -63,6 +64,8 @@ class Repository implements IRepository {
 	private static final String PLAYER_POSITION_Y = "positionY";
 
 	private static final String PLAYER_HEADING = "heading";
+
+	public static final String PLAYER_CHECKPOINTS = "checkpoints";
 
 	public static final String COMMAND_COMMAND = "command";
 
@@ -214,9 +217,6 @@ class Repository implements IRepository {
 	public Board loadGameFromDB(int id) {
 		Board game = LoadBoard.loadBoard(null);;
 		try {
-			// TODO here, we could actually use a simpler statement
-			//      which is not updatable, but reuse the one from
-			//      above for the pupose
 			PreparedStatement ps = getSelectGameStatementU();
 			ps.setInt(1, id);
 
@@ -300,6 +300,7 @@ class Repository implements IRepository {
 			rs.updateInt(PLAYER_POSITION_X, player.getSpace().x);
 			rs.updateInt(PLAYER_POSITION_Y, player.getSpace().y);
 			rs.updateInt(PLAYER_HEADING, player.getHeading().ordinal());
+			rs.updateInt(PLAYER_CHECKPOINTS, player.getCheckpointsReached());
 			rs.insertRow();
 		}
 
@@ -391,7 +392,7 @@ class Repository implements IRepository {
 				int heading = rs.getInt(PLAYER_HEADING);
 				player.setHeading(Heading.values()[heading]);
 
-				// TODO  should also load players program and hand here
+				player.setCheckpointsReached(rs.getInt(PLAYER_CHECKPOINTS));
 
 			} else {
 				// TODO error handling
@@ -475,6 +476,7 @@ class Repository implements IRepository {
 			rs.updateInt(PLAYER_POSITION_X, player.getSpace().x);
 			rs.updateInt(PLAYER_POSITION_Y, player.getSpace().y);
 			rs.updateInt(PLAYER_HEADING, player.getHeading().ordinal());
+			rs.updateInt(PLAYER_CHECKPOINTS, player.getCheckpointsReached());
 			// TODO error handling
 			// TODO take care of case when number of players changes, etc
 			rs.updateRow();

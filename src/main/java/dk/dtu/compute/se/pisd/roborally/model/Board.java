@@ -62,7 +62,7 @@ public class Board extends Subject {
 
     private boolean stepMode;
 
-    public final int CHECKPOINTS;
+    private int checkpoints;
 
     public Board(int width, int height, @NotNull String boardName) {
         this.boardName = boardName;
@@ -81,7 +81,7 @@ public class Board extends Subject {
         damageCards.put(Command.TROJAN_HORSE, 15);
         damageCards.put(Command.WORM, 10);
         damageCards.put(Command.VIRUS, 10);
-        this.CHECKPOINTS = 0;
+        this.checkpoints = 0;
         this.stepMode = false;
     }
     public Board(int width, int height, @NotNull String boardName, int checkpoints) {
@@ -95,7 +95,7 @@ public class Board extends Subject {
                 spaces[x][y] = space;
             }
         }
-        this.CHECKPOINTS = checkpoints;
+        this.checkpoints = checkpoints;
         this.stepMode = false;
     }
 
@@ -203,7 +203,7 @@ public class Board extends Subject {
     public Space getRebootToken(){
         for(Space[] x : spaces)
             for(Space y : x)
-                if(y.getBoardElement() != null && y.getBoardElement().getClass() == RebootToken.class)
+                if(y.getBoardElement() != null && y.getBoardElement() instanceof RebootToken)
                     return y;
         return spaces[0][0];
     }
@@ -279,6 +279,15 @@ public class Board extends Subject {
         int i = damageCards.get(command);
         return i;
     }
+
+    public int getCheckpoints() {
+        return checkpoints;
+    }
+
+    public void setCheckpoints(int checkpoints) {
+        this.checkpoints = checkpoints;
+    }
+
     public String getStatusMessage() {
         // this is actually a view aspect, but for making assignment V1 easy for
         // the students, this method gives a string representation of the current

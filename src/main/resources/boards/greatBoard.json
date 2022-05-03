@@ -16,36 +16,6 @@
       ],
       "x": 2,
       "y": 2
-    },
-    {
-      "walls":[
-        "EAST"
-      ],
-      "actions":[
-        {
-          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.Checkpoint",
-          "INSTANCE": {
-            "number": 2
-          }
-        }
-      ],
-      "x": 7,
-      "y": 7
-    },
-    {
-      "walls":[
-        "EAST"
-      ],
-      "actions":[
-        {
-          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.Checkpoint",
-          "INSTANCE": {
-            "number": 3
-          }
-        }
-      ],
-      "x": 2,
-      "y": 6
     }
   ]
 }
