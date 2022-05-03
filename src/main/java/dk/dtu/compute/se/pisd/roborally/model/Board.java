@@ -238,7 +238,7 @@ public class Board extends Subject {
 
         return getSpace(x, y);
     }
-
+// V1:
     public int getCounter() {
         return counter;
     }
