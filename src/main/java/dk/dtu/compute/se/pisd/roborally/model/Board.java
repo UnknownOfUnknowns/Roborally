@@ -76,7 +76,6 @@ public class Board extends Subject {
             }
         }
         this.damageCards = new HashMap<>();
-        //TODO the different number of cards in each category should be revised
         damageCards.put(Command.SPAM, 36);
         damageCards.put(Command.TROJAN_HORSE, 15);
         damageCards.put(Command.WORM, 10);
@@ -262,7 +261,9 @@ public class Board extends Subject {
         this.winner = winner;
         notifyChange();
     }
-
+    /**
+     * Draw a specified ammount of damage cards from the pile of the specified command-type
+     * */
     public List<CommandCard> drawDamageCards(Command command, int ammount){
         for(Map.Entry<Command, Integer> entry: damageCards.entrySet()){
             if(entry.getKey().equals(command) && entry.getValue() >= ammount){
@@ -300,4 +301,7 @@ public class Board extends Subject {
                 ", Moves = " + getCounter();
     }
 
+    public Map<Command, Integer> getDamageCards() {
+        return damageCards;
+    }
 }

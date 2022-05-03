@@ -1,5 +1,6 @@
 package dk.dtu.compute.se.pisd.roborally.model.boardElements;
 
+import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 /**
  * @author s211638
@@ -18,6 +19,7 @@ public class EnergySpace implements BoardElement{
             player.setEnergyCubes(player.getEnergyCubes() + 1);
             energyCubes--;
         }
+        //Add an extra energy cube to the players energy level in case it is the fifth register
         if(player.board.getStep() == 4){
             player.setEnergyCubes(player.getEnergyCubes() + 1);
         }
