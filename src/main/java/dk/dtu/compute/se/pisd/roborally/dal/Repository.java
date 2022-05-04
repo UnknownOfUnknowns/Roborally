@@ -23,12 +23,9 @@ package dk.dtu.compute.se.pisd.roborally.dal;
 
 import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
 import dk.dtu.compute.se.pisd.roborally.model.*;
-import dk.dtu.compute.se.pisd.roborally.model.boardElements.Checkpoint;
 
-import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -102,12 +99,6 @@ class Repository implements IRepository {
 				ps.setInt(4, game.getStep());
 				ps.setString(5, game.boardName);
 
-				// If you have a foreign key constraint for current players,
-				// the check would need to be temporarily disabled, since
-				// MySQL does not have a per transaction validation, but
-				// validates on a per row basis.
-				// Statement statement = connection.createStatement();
-				// statement.execute("SET foreign_key_checks = 0");
 
 				int affectedRows = ps.executeUpdate();
 				ResultSet generatedKeys = ps.getGeneratedKeys();
@@ -139,7 +130,7 @@ class Repository implements IRepository {
 					rs.updateInt(GAME_CURRENTPLAYER, game.getPlayerNumber(game.getCurrentPlayer()));
 					rs.updateRow();
 				} else {
-					// TODO error handling
+					connection.rollback();
 				}
 				rs.close();
 
@@ -147,7 +138,6 @@ class Repository implements IRepository {
 				connection.setAutoCommit(true);
 				return true;
 			} catch (SQLException e) {
-				// TODO error handling
 				e.printStackTrace();
 				System.err.println("Some DB error");
 
@@ -155,7 +145,6 @@ class Repository implements IRepository {
 					connection.rollback();
 					connection.setAutoCommit(true);
 				} catch (SQLException e1) {
-					// TODO error handling
 					e1.printStackTrace();
 				}
 			}
@@ -228,12 +217,10 @@ class Repository implements IRepository {
 					game = LoadBoard.loadBoard(boardName);
 				}
 				playerNo = rs.getInt(GAME_CURRENTPLAYER);
-				// TODO currently we do not set the games name (needs to be added)
 				game.setPhase(Phase.values()[rs.getInt(GAME_PHASE)]);
 				game.setStep(rs.getInt(GAME_STEP));
 			} else {
-				// TODO error handling
-				return null;
+				return new Board(8,8);
 			}
 			rs.close();
 
@@ -244,13 +231,9 @@ class Repository implements IRepository {
 			if (playerNo >= 0 && playerNo < game.getPlayersNumber()) {
 				game.setCurrentPlayer(game.getPlayer(playerNo));
 			} else {
-				// TODO  error handling
 				return null;
 			}
 
-			/* TODO this method needs to be implemented first
-			loadCardFieldsFromDB(game);
-			*/
 
 			return game;
 		} catch (SQLException e) {
@@ -283,7 +266,9 @@ class Repository implements IRepository {
 		}
 		return result;
 	}
-
+	/**
+	 * @author s211638
+	 * */
 	private void createPlayersInDB(Board game) throws SQLException {
 		// TODO code should be more defensive
 		PreparedStatement ps = getSelectPlayersStatementU();
@@ -307,7 +292,7 @@ class Repository implements IRepository {
 		rs.close();
 	}
 	/**
-	 *
+	 * @author s211638
 	 * */
 	private int getPileSize(String pileName, Player player){
 		switch (pileName){
@@ -319,6 +304,9 @@ class Repository implements IRepository {
 		}
 	}
 
+	/**
+	 * @author s211638
+	 * */
 	private CommandCard getCommandCard(String pileName, Player player, int index){
 		try {
 			switch (pileName) {
@@ -343,6 +331,10 @@ class Repository implements IRepository {
 		}
 	}
 
+	/**
+	 * @author s215722
+	 * @author s215705
+	 * */
 	private void createCommandCardsInDB(Board game) throws SQLException {
 		PreparedStatement ps = getSelectCommandCardsStatementOrderedByIndex();
 		ps.setInt(1, game.getGameId());
@@ -371,6 +363,10 @@ class Repository implements IRepository {
 		rs.close();
 	}
 
+	/**
+	 * @author s215722
+	 * @author s215705
+	 * */
 	private void loadPlayersFromDB(Board game) throws SQLException {
 		PreparedStatement ps = getSelectPlayersASCStatement();
 		ps.setInt(1, game.getGameId());
@@ -403,6 +399,7 @@ class Repository implements IRepository {
 	}
 
 	/**
+	 * @author s211638
 	 * Sets the commandCards into the appropriate pile. The programming and discard pile do not make use of the index
 	 * since the size of these is zero from the beginning. The order is still maintained in these if the functions is called
 	 * in the order the cards are in. It should be noted that the order of the mentioned piles is irrelevant since the programming
@@ -429,10 +426,11 @@ class Repository implements IRepository {
 		}
 	}
 	/**
+	 * @author s215722
+	 * @author s215705
 	 * Updates the commandCards by first deleting them. This is easier since the discard pile and the drawing pile is
 	 * of variable length
 	 * */
-
 	private void loadCommandCardsFromDB(Board game) throws SQLException {
 		PreparedStatement ps = getSelectCommandCardsStatementOrderedByIndex();
 		ps.setInt(1, game.getGameId());
@@ -463,6 +461,10 @@ class Repository implements IRepository {
 		}
 		rs.close();
 	}
+
+	/**
+	 * @author s211638
+	 * */
 	private void updatePlayersInDB(Board game) throws SQLException {
 		PreparedStatement ps = getSelectPlayersStatementU();
 		ps.setInt(1, game.getGameId());
@@ -485,8 +487,13 @@ class Repository implements IRepository {
 
 		// TODO error handling/consistency check: check whether all players were updated
 	}
-
+	/**
+	 * @author s211638
+	 * */
 	private void updateCommandCardsInDB(Board game) throws SQLException {
+		//Since some of the command card piles are of dynamic length we just delete the piles in DB,
+		//and creates them again, this is easier than removing some cards from the database and updating
+		//others
 		PreparedStatement ps = deleteCommandCardsStatement();
 		ps.setInt(1, game.getGameId());
 

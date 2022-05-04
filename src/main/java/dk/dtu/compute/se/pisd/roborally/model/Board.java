@@ -262,6 +262,7 @@ public class Board extends Subject {
         notifyChange();
     }
     /**
+     * @author s215705
      * Draw a specified ammount of damage cards from the pile of the specified command-type
      * */
     public List<CommandCard> drawDamageCards(Command command, int ammount){
