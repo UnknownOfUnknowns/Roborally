@@ -49,7 +49,10 @@ public class LoadBoard {
     private static final String BOARDSFOLDER = "boards";
     private static final String DEFAULTBOARD = "defaultboard";
     private static final String JSON_EXT = "json";
-
+    /**
+     * @author s215718
+     * The board is first loaded into BoardTemplate afterwards spaces are set up with their elements and walls
+     * */
     public static Board loadBoard(String boardname) {
         if (boardname == null) {
             boardname = DEFAULTBOARD;
@@ -80,6 +83,7 @@ public class LoadBoard {
                         space.setWalls(spaceTemplate.walls);
                         BoardElement element = spaceTemplate.actions.get(0);
                         space.setBoardElement(element);
+                        //Find the number of checkpoints in the game
                         if(element instanceof Checkpoint){
                             Checkpoint checkpoint = (Checkpoint) element;
                             if(checkpoint.getNumber() > board.getCheckpoints()){

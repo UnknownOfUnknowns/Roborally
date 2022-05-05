@@ -3,6 +3,7 @@ package dk.dtu.compute.se.pisd.roborally.model;
 import org.jetbrains.annotations.NotNull;
 /**
  * @author s215705
+ * @author s215718
  * This function handles the movement of a player from one space to another.
  * The movement is quite complicated procedure, therefore it is kept in this interface which can then be used
  * where it fits.
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public interface PlayerMover {
     /**
      * @author s215705
+     * @author s215718
      * Moves a player to a space if it is legal otherwise ImpossibleMoveException is thrown
      * */
     default void moveToSpace(@NotNull Player player,

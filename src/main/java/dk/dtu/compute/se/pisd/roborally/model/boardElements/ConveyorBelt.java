@@ -12,11 +12,15 @@ public class ConveyorBelt implements BoardElement, PlayerMover {
     public ConveyorBelt(Heading heading){
         this.heading = heading;
     }
-
+    /**
+     * Moves the player who interacts with the conveyer belt to the neighbouring space in the direction of heading
+     * */
     @Override
     public void interact(Player player) {
         Space newSpace = player.board.getNeighbour(player.getSpace(), heading);
-        if(newSpace.getPlayer() == null){
+        //Dont move the player if the new space is occupied and isn't a conveyor belt
+        if(!(newSpace.getPlayer() != null && newSpace.getBoardElement() != null &&
+                !( newSpace.getBoardElement()instanceof ConveyorBelt))){
             try {
                 moveToSpace(player, newSpace, heading);
             } catch (ImpossibleMoveException e) {

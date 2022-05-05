@@ -90,7 +90,10 @@ public class SpaceView extends StackPane implements ViewObserver {
             this.getChildren().add(arrow);
         }
     }
-
+    /**
+     * @author s215705
+     * Updates the view of the space whenever one of its subject changes relevant information
+     * */
     @Override
     public void updateView(Subject subject) {
         this.getChildren().clear();
