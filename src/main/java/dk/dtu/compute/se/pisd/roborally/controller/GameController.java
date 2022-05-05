@@ -345,6 +345,9 @@ public class GameController implements PlayerMover{
         case WORM:
             worm(player);
             break;
+        case VIRUS:
+            virus(player);
+            break;
         default:
             // DO NOTHING (for now)
         }
@@ -363,7 +366,9 @@ public class GameController implements PlayerMover{
         player.addToDiscardPile(field.getCard());
         field.setCard(player.drawCardFromProgrammingPile());
     }
-
+    /**
+     * @author s215705
+     * */
     public void trojanHorse(@NotNull Player player){
         CommandCardField field = player.getProgramField(board.getStep());
         player.addToDiscardPile(field.getCard());
@@ -371,15 +376,29 @@ public class GameController implements PlayerMover{
         drawDamageCardsAndFill(player, Command.SPAM, 2);
     }
 
+
+    /**
+     * @author s215705
+     * */
     public void worm(@NotNull Player player){
         player.setState(PlayerState.DAMAGED);
     }
 
+
+    /**
+     * @author s215705
+     * */
     public void virus(@NotNull Player player){
         CommandCardField field = player.getProgramField(board.getStep());
         player.addToDiscardPile(field.getCard());
         field.setCard(player.drawCardFromProgrammingPile());
-
+        //The radius has been set to 3 here instead of 6 since six is overkill for our boards.
+        ArrayList<Space> hitSpaces = board.getSpacesInRadius(player.getSpace(), 3);
+        for(Space space : hitSpaces){
+            Player player1 = space.getPlayer();
+            if(player1 != null)
+                player1.setState(PlayerState.DAMAGED);
+        }
     }
 
 

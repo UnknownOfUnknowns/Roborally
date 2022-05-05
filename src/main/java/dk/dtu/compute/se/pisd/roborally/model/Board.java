@@ -76,7 +76,7 @@ public class Board extends Subject {
             }
         }
         this.damageCards = new HashMap<>();
-        damageCards.put(Command.SPAM, 1);
+        damageCards.put(Command.SPAM, 10);
         damageCards.put(Command.TROJAN_HORSE, 15);
         damageCards.put(Command.WORM, 10);
         damageCards.put(Command.VIRUS, 10);
@@ -296,9 +296,31 @@ public class Board extends Subject {
         for(int i = 0; i < radius; i++)
             startSpace = getNeighbour(startSpace, Heading.NORTH);
         spaces.add(startSpace);
-        for(int i = 0; i < radius*2; i++){
-
+        for(int i = 0; i < radius; i++){
+            startSpace = getNeighbour(startSpace, Heading.SOUTH);
+            spaces.add(startSpace);
+            Space leftSpace = startSpace;
+            Space rightSpace = startSpace;
+            for(int j = 0; j < i+1; j++){
+                leftSpace = getNeighbour(leftSpace, Heading.WEST);
+                rightSpace = getNeighbour(rightSpace, Heading.EAST);
+                spaces.add(leftSpace);
+                spaces.add(rightSpace);
+            }
         }
+        for(int i = 0; i < radius; i++){
+            startSpace = getNeighbour(startSpace, Heading.SOUTH);
+            spaces.add(startSpace);
+            Space leftSpace = startSpace;
+            Space rightSpace = startSpace;
+            for(int j = 0; j < radius-i-1; j++){
+                leftSpace = getNeighbour(leftSpace, Heading.WEST);
+                rightSpace = getNeighbour(rightSpace, Heading.EAST);
+                spaces.add(leftSpace);
+                spaces.add(rightSpace);
+            }
+        }
+
         return spaces;
     }
     public String getStatusMessage() {

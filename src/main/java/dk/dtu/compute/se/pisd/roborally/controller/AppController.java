@@ -36,6 +36,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.event.WindowAdapter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
