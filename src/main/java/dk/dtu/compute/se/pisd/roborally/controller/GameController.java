@@ -50,17 +50,19 @@ public class GameController implements PlayerMover{
      *
      * @param space the space to which the current player should move
      */
+
+    //V1
     public void moveCurrentPlayerToSpace(@NotNull Space space) {
-        if (space.getPlayer() == null) {
-            Player currentPlayer = board.getCurrentPlayer();
-            currentPlayer.setSpace(space);
-            if (board.getPlayerNumber(currentPlayer) == board.getPlayersNumber() - 1) {
-                board.setCurrentPlayer(board.getPlayer(0));
-            } else {
-                Player newPlayer = board.getPlayer(board.getPlayerNumber(currentPlayer) + 1);
-                board.setCurrentPlayer(newPlayer);
-            }
-            board.setCounter(board.getCounter() + 1);
+        if(space.getPlayer()==null){
+            Player player=board.getCurrentPlayer();
+            space.setPlayer(player);
+            int next;
+            if(board.getPlayerNumber(player)+1!=board.getPlayersNumber()){
+                next=board.getPlayerNumber(player)+1;}
+            else{
+                next=0;}
+            board.setCurrentPlayer(board.getPlayer(next));
+            board.setCounter(board.getCounter()+1);
         }
     }
 

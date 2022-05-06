@@ -47,28 +47,28 @@ import java.util.Map;
  */
 public class PlayerView extends Tab implements ViewObserver {
 
-    private Player player;
+    private final Player player;
 
-    private VBox top;
+    private final VBox top;
 
-    private Label programLabel;
-    private GridPane programPane;
-    private Label cardsLabel;
-    private GridPane cardsPane;
-   private Label checkPoint;
-    private CardFieldView[] programCardViews;
-    private CardFieldView[] cardViews;
+    private final Label programLabel;
+    private final GridPane programPane;
+    private final Label cardsLabel;
+    private final GridPane cardsPane;
+   private final Label checkPoint;
+    private final CardFieldView[] programCardViews;
+    private final CardFieldView[] cardViews;
 
-    private VBox buttonPanel;
+    private final VBox buttonPanel;
 
-    private Button finishButton;
-    private Button executeButton;
-    private Button stepButton;
+    private final Button finishButton;
+    private final Button executeButton;
+    private final Button stepButton;
 
 
-    private VBox playerInteractionPanel;
+    private final VBox playerInteractionPanel;
 
-    private GameController gameController;
+    private final GameController gameController;
 
     public PlayerView(@NotNull GameController gameController, @NotNull Player player) {
         super(player.getName());
