@@ -19,14 +19,6 @@ public interface PlayerMover {
                                     @NotNull Heading heading) throws ImpossibleMoveException{
         Player playerOnSpace = space.getPlayer();
         Board board = space.board;
-        if(playerOnSpace != null){
-            Space nextSpace = board.getNeighbour(space, heading);
-            if(nextSpace != null){
-                moveToSpace(playerOnSpace, nextSpace, heading);
-            }else{
-                throw new ImpossibleMoveException(player, space, heading);
-            }
-        }
         if(space.getWalls() != null) {
             for (Heading head : space.getWalls()) {
                 if (board.getNeighbour(space, head).equals(player.getSpace()))
@@ -37,6 +29,15 @@ public interface PlayerMover {
             for (Heading head : player.getSpace().getWalls()) {
                 if (board.getNeighbour(player.getSpace(), head).equals(space))
                     throw new ImpossibleMoveException(player, space, heading);
+            }
+        }
+
+        if(playerOnSpace != null){
+            Space nextSpace = board.getNeighbour(space, heading);
+            if(nextSpace != null){
+                moveToSpace(playerOnSpace, nextSpace, heading);
+            }else{
+                throw new ImpossibleMoveException(player, space, heading);
             }
         }
         player.setSpace(space);

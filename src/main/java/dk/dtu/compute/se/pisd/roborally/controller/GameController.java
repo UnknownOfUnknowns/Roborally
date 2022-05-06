@@ -23,9 +23,11 @@ package dk.dtu.compute.se.pisd.roborally.controller;
 
 import dk.dtu.compute.se.pisd.roborally.model.*;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.BoardElement;
+import dk.dtu.compute.se.pisd.roborally.model.boardElements.Pit;
 import dk.dtu.compute.se.pisd.roborally.model.boardElements.RebootToken;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -135,10 +137,17 @@ public class GameController implements PlayerMover{
     // XXX: V2
     private void continuePrograms() {
         do {
+            for (Player player : board.getPlayers()) {
+                if(player.getState() == PlayerState.DAMAGED){
+                    handleDamagedPlayer(player);
+                    return;
+                }
+            }
             executeNextStep();
         } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
     }
     /**
+     * @author s215718
      * Iterates through the players to see if any of them has reached all checkpoints, if so the phase of the
      * game is set to GAME_FINISHED
      * @return has a player won
@@ -157,43 +166,53 @@ public class GameController implements PlayerMover{
     }
 
     /**
+     * @author s215722
+     * @author s215705
      * Draws cards and puts the player onto the reboot token when the player has been damaged
      * */
     private void handleDamagedPlayer(Player player){
-
         Space rebootToken = board.getRebootToken();
+        Space newSpace = rebootToken;
         if(rebootToken.getBoardElement() != null && rebootToken.getBoardElement() instanceof RebootToken){
             RebootToken token = (RebootToken) rebootToken.getBoardElement();
-            if(rebootToken.getPlayer() != null){
+            if(rebootToken.getPlayer() != null) {
                 Player playerOnSpace = rebootToken.getPlayer();
                 try {
                     moveToSpace(playerOnSpace, board.getNeighbour(playerOnSpace.getSpace(), token.getHeading()), token.getHeading());
-                }catch (ImpossibleMoveException e){
-                    e.printStackTrace();
+                } catch (ImpossibleMoveException e) {
+                    //In the rare case that the reboot token cannot be freed a space is found without other players or a pit
+                    for (int i = 0; i < board.width; i++)
+                        for (int j = 0; j < board.height; j++) {
+                            Space spaceCandidate = board.getSpace(i, j);
+                            if (spaceCandidate != null && spaceCandidate.getPlayer() == null && !(spaceCandidate.getBoardElement() instanceof Pit)) {
+                                newSpace=spaceCandidate;
+                            }
+                        }
                 }
             }
-            //moveToSpace cannot be used since the player should not move directly to a neighbouring space
-            player.setSpace(rebootToken);
-            int amountOfSpam = board.getAmountOfDamageCard(Command.SPAM);
-            if(amountOfSpam >= CARDS_TO_BE_DRAWN_ON_REBOOT) {
-                List<CommandCard> cards = board.drawDamageCards(Command.SPAM, CARDS_TO_BE_DRAWN_ON_REBOOT);
-                player.addToDiscardPile(cards);
-            } else {
-                //TODO here the player should be able to choose which cards to draw instead
-                player.addToDiscardPile(board.drawDamageCards(Command.SPAM, amountOfSpam));
-                player.setResidualCardDraw(CARDS_TO_BE_DRAWN_ON_REBOOT-amountOfSpam);
-            }
-            board.setPhase(Phase.PLAYER_INTERACTION);
+            player.setSpace(newSpace);
+            drawDamageCardsAndFill(player, Command.SPAM, CARDS_TO_BE_DRAWN_ON_REBOOT);
+            player.setState(PlayerState.NORMAL);
             player.addAllToDiscardPile();
         }
     }
-    /**
-     * When the player has chosen which direction to face on reboot this function sets the state of the game back to normal
-     * */
-    public void endHandlingOfDamagedPlayer(Player player, Heading heading){
-        player.setHeading(heading);
-        board.setPhase(Phase.ACTIVATION);
-        player.setState(PlayerState.NORMAL);
+
+    private void drawDamageCardsAndFill(Player player, Command command, int numberOfCards) {
+        Command[] damageCommands = new Command[]{Command.SPAM, Command.TROJAN_HORSE, Command.VIRUS, Command.WORM};
+        int amount = board.getAmountOfDamageCard(command);
+        if(amount >= numberOfCards) {
+            List<CommandCard> cards = board.drawDamageCards(command, numberOfCards);
+            player.addToDiscardPile(cards);
+        } else {
+            player.addToDiscardPile(board.drawDamageCards(command, numberOfCards));
+            for(int i = 0; i < numberOfCards-amount; i++){
+                Command tryToDrawCommand = damageCommands[((int) (Math.random()*4))];
+                if(board.getDamageCards().get(tryToDrawCommand) > 0){
+                    player.addToDiscardPile(board.drawDamageCards(tryToDrawCommand ,1));
+                }
+            }
+        }
+
     }
 
     private void startNewRound(){
@@ -202,9 +221,6 @@ public class GameController implements PlayerMover{
             BoardElement element = player.getSpace().getBoardElement();
             if(element != null)
                 element.interact(player);
-            if(player.getState() == PlayerState.DAMAGED){
-                handleDamagedPlayer(player);
-            }
         }
 
         step++;
@@ -236,24 +252,29 @@ public class GameController implements PlayerMover{
             if (step >= 0 && step < Player.NO_REGISTERS) {
                 CommandCard card = currentPlayer.getProgramField(step).getCard();
                 if (card != null) {
-                    if(card.command.isInteractive()){
-                        board.setPhase(Phase.PLAYER_INTERACTION);
-                        return;
-                    }else if(card.command.equals(Command.AGAIN)){
-                        CommandCard prevCard = currentPlayer.getProgramField(step-1).getCard();
-                        if(prevCard.command.isInteractive()){
-                            board.setPhase(Phase.PLAYER_INTERACTION);
-                            return;
-                        }
-                    }
-                    executeCommand(currentPlayer, card.command);
-
                     if(card.command == Command.SPAM || card.command == Command.TROJAN_HORSE || card.command == Command.WORM
-                        || card.command == Command.VIRUS){
+                            || card.command == Command.VIRUS){
+                       executeCommand(currentPlayer,card.command);
+                        //Take out damage cards immediately after use and put them back into their respective piles
                         Integer numberOfCardsInPile = board.getDamageCards().get(card.command);
                         board.getDamageCards().put(card.command, numberOfCardsInPile +1);
-                        currentPlayer.getProgramField(step).setCard(null);
+                        card = currentPlayer.getProgramField(step).getCard();
                     }
+                    //Check that the player hasnt been damaged during the last step
+                    if(currentPlayer.getState() == PlayerState.NORMAL) {
+                        if (card.command.isInteractive()) {
+                            board.setPhase(Phase.PLAYER_INTERACTION);
+                            return;
+                        } else if (card.command.equals(Command.AGAIN)) {
+                            CommandCard prevCard = currentPlayer.getProgramField(step - 1).getCard();
+                            if (prevCard.command.isInteractive()) {
+                                board.setPhase(Phase.PLAYER_INTERACTION);
+                                return;
+                            }
+                        }
+                        executeCommand(currentPlayer, card.command);
+                    }
+
                 }
                 if(winnerFound()) {
                     board.setPhase(Phase.GAME_FINISHED);
@@ -316,6 +337,12 @@ public class GameController implements PlayerMover{
         case SPAM:
             spam(player);
             break;
+        case TROJAN_HORSE:
+            trojanHorse(player);
+            break;
+        case WORM:
+            worm(player);
+            break;
         default:
             // DO NOTHING (for now)
         }
@@ -326,14 +353,34 @@ public class GameController implements PlayerMover{
 
 
     /**
+     * @author s215722
      * Executes the first card of the program fields
      * */
     public void spam(@NotNull Player player){
-        if(player != null){
-            CommandCard card = player.getProgramField(0).getCard();
-            executeCommand(player, card.command);
-        }
+        CommandCardField field = player.getProgramField(board.getStep());
+        player.addToDiscardPile(field.getCard());
+        field.setCard(player.drawCardFromProgrammingPile());
     }
+
+    public void trojanHorse(@NotNull Player player){
+        CommandCardField field = player.getProgramField(board.getStep());
+        player.addToDiscardPile(field.getCard());
+        field.setCard(player.drawCardFromProgrammingPile());
+        drawDamageCardsAndFill(player, Command.SPAM, 2);
+    }
+
+    public void worm(@NotNull Player player){
+        player.setState(PlayerState.DAMAGED);
+    }
+
+    public void virus(@NotNull Player player){
+        CommandCardField field = player.getProgramField(board.getStep());
+        player.addToDiscardPile(field.getCard());
+        field.setCard(player.drawCardFromProgrammingPile());
+
+    }
+
+
 
     /**
      * @author s215722
@@ -354,7 +401,6 @@ public class GameController implements PlayerMover{
             }
         }
     }
-
 
     /**
      * @author s215722
@@ -453,11 +499,12 @@ public class GameController implements PlayerMover{
             // Make sure that again-cards and damageCards cannot be put in the first programming field
             for(int i = 0; i < board.getPlayersNumber(); i++){
                 Command command= sourceCard.command;
-                if((command.equals(Command.AGAIN) || command.equals(Command.SPAM) ||
+                if(((command.equals(Command.AGAIN) || command.equals(Command.SPAM) ||
                         command.equals(Command.TROJAN_HORSE) || command.equals(Command.WORM)
-                || command.equals(Command.VIRUS)) && board.getPlayer(i).getProgramField(0) == target)
+                || command.equals(Command.VIRUS)) && board.getPlayer(i).getProgramField(0) == target))
                     return false;
             }
+
             target.setCard(sourceCard);
             source.setCard(null);
             return true;

@@ -108,6 +108,11 @@ public class AppController implements Observer {
 
     public void saveGame() {
         if(gameController != null){
+            //Don't save if a player is damaged
+            for(Player player : gameController.board.getPlayers()){
+                if(player.getState() == PlayerState.DAMAGED)
+                    return;
+            }
             RepositoryAccess.getRepository().updateGameInDB(gameController.board);
         }
     }

@@ -58,14 +58,12 @@ public class Player extends Subject {
     private List<CommandCard> programmingPile;
     private int checkpointsReached;
     private int energyCubes;
-    private int residualCardDraw;
 
     public Player(@NotNull Board board, String color, @NotNull String name) {
         this.board = board;
         this.name = name;
         this.color = color;
         this.checkpointsReached = 0;
-        this.residualCardDraw = 0;
         this.space = null;
         this.energyCubes = 5;
         this.state = PlayerState.NORMAL;
@@ -249,12 +247,5 @@ public class Player extends Subject {
         return state;
     }
 
-    public int getResidualCardDraw() {
-        return residualCardDraw;
-    }
-
-    public void setResidualCardDraw(int residualCardDraw) {
-        this.residualCardDraw = residualCardDraw;
-    }
 
 }

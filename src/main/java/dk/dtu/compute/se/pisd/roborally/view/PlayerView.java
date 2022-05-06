@@ -219,7 +219,6 @@ the default background for the programming phase.
 
                     CommandCard commandCard = player.getProgramField(player.board.getStep()).getCard();
                     //Handle interactive programming cards
-
                     if(commandCard != null) {
                         Command command = commandCard.command;
                         if (command.isInteractive()) {
@@ -231,28 +230,7 @@ the default background for the programming phase.
                         }
                     }
                 }
-                //Get input for the directing of the robot after reboot
-                if(player.getState() == PlayerState.DAMAGED && player.getSpace().getBoardElement() != null &&
-                        player.getSpace().getBoardElement() instanceof RebootToken){
-                    Heading chosenHeading = null;
-                    for(Heading heading : Heading.values()){
-                        Button optionButton = new Button(heading.name());
-                        optionButton.setOnAction(new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent actionEvent) {
 
-                            }
-                        });
-                        optionButton.setDisable(false);
-                        playerInteractionPanel.getChildren().add(optionButton);
-                    }
-                    Map<Command, Integer> drawConfiguration = new HashMap<>();
-                    for(int i = 0; i < player.getResidualCardDraw(); i++){
-                        for(Map.Entry<Command, Integer> entry : player.board.getDamageCards().entrySet()){
-
-                        }
-                    }
-                }
             }
         }
     }
@@ -271,5 +249,9 @@ the default background for the programming phase.
             }
         }
     }
+
+    /*
+    *
+                }*/
 
 }

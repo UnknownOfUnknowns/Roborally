@@ -76,7 +76,7 @@ public class Board extends Subject {
             }
         }
         this.damageCards = new HashMap<>();
-        damageCards.put(Command.SPAM, 36);
+        damageCards.put(Command.SPAM, 1);
         damageCards.put(Command.TROJAN_HORSE, 15);
         damageCards.put(Command.WORM, 10);
         damageCards.put(Command.VIRUS, 10);
@@ -290,6 +290,17 @@ public class Board extends Subject {
         this.checkpoints = checkpoints;
     }
 
+    public ArrayList<Space> getSpacesInRadius(Space space, int radius){
+        ArrayList<Space> spaces = new ArrayList<>();
+        Space startSpace = space;
+        for(int i = 0; i < radius; i++)
+            startSpace = getNeighbour(startSpace, Heading.NORTH);
+        spaces.add(startSpace);
+        for(int i = 0; i < radius*2; i++){
+
+        }
+        return spaces;
+    }
     public String getStatusMessage() {
         // this is actually a view aspect, but for making assignment V1 easy for
         // the students, this method gives a string representation of the current

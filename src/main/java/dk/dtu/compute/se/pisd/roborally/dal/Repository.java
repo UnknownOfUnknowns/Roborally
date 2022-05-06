@@ -491,7 +491,7 @@ class Repository implements IRepository {
 	 * @author s211638
 	 * */
 	private void updateCommandCardsInDB(Board game) throws SQLException {
-		//Since some of the command card piles are of dynamic length we just delete the piles in DB,
+		//Since some command card piles are of dynamic length we just delete the piles in DB,
 		//and creates them again, this is easier than removing some cards from the database and updating
 		//others
 		PreparedStatement ps = deleteCommandCardsStatement();
