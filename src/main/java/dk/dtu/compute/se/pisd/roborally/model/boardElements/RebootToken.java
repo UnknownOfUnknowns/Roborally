@@ -22,6 +22,6 @@ public class RebootToken implements BoardElement{
 
     @Override
     public void interact(Player player) {
-        //Do not do anything here the necessary actions will be performed in the GameController
+        player.setHeading(heading);
     }
 }

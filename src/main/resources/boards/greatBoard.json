@@ -16,6 +16,186 @@
       ],
       "x": 2,
       "y": 2
+    },
+    {
+      "walls":[
+        "WEST"
+      ],
+      "actions":[
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.Checkpoint",
+          "INSTANCE": {
+            "number": 2
+          }
+        }
+      ],
+      "x": 6,
+      "y": 5
+    },
+    {
+      "walls":[
+        "EAST",
+        "SOUTH"
+      ],
+      "actions":[
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.Pit",
+          "INSTANCE": {
+          }
+        }
+      ],
+      "x": 6,
+      "y": 3
+    },
+    {
+      "walls":[
+
+      ],
+      "actions":[
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.RebootToken",
+          "INSTANCE": {
+            "heading": "WEST"
+          }
+        }
+      ],
+      "x": 0,
+      "y": 7
+    },
+    {
+      "walls":[
+
+      ],
+      "actions":[
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyorBelt",
+          "INSTANCE": {
+            "heading": "NORTH"
+          }
+        }
+      ],
+      "x": 5,
+      "y": 0
+    },
+    {
+      "walls":[
+
+      ],
+      "actions":[
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyorBelt",
+          "INSTANCE": {
+            "heading": "NORTH"
+          }
+        }
+      ],
+      "x": 5,
+      "y": 1
+    },
+    {
+      "walls":[
+
+      ],
+      "actions":[
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyorBelt",
+          "INSTANCE": {
+            "heading": "NORTH"
+          }
+        }
+      ],
+      "x": 5,
+      "y": 2
+    },
+    {
+      "walls":[
+
+      ],
+      "actions":[
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyorBelt",
+          "INSTANCE": {
+            "heading": "NORTH"
+          }
+        }
+      ],
+      "x": 5,
+      "y": 3
+    },
+    {
+      "walls":[
+
+      ],
+      "actions":[
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyorBelt",
+          "INSTANCE": {
+            "heading": "NORTH"
+          }
+        }
+      ],
+      "x": 5,
+      "y": 4
+    },
+    {
+      "walls":[
+
+      ],
+      "actions":[
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyorBelt",
+          "INSTANCE": {
+            "heading": "NORTH"
+          }
+        }
+      ],
+      "x": 5,
+      "y": 5
+    },
+    {
+      "walls":[
+
+      ],
+      "actions":[
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyorBelt",
+          "INSTANCE": {
+            "heading": "NORTH"
+          }
+        }
+      ],
+      "x": 5,
+      "y": 6
+    },
+    {
+      "walls":[
+
+      ],
+      "actions":[
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.ConveyorBelt",
+          "INSTANCE": {
+            "heading": "NORTH"
+          }
+        }
+      ],
+      "x": 5,
+      "y": 7
+    },
+    {
+      "walls":[
+
+      ],
+      "actions":[
+        {
+          "CLASSNAME": "dk.dtu.compute.se.pisd.roborally.model.boardElements.EnergySpace",
+          "INSTANCE": {
+            "energyCubes": 1
+          }
+        }
+      ],
+      "x": 1,
+      "y": 2
     }
   ]
 }

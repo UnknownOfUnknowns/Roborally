@@ -82,7 +82,6 @@ public class AppController implements Observer {
             //     here we just create an empty board with the required number of players.
             ArrayList<String> boards = new ArrayList<>();
             boards.add("defaultboard");
-            boards.add("emptyboard");
             boards.add("greatBoard");
             ChoiceDialog<String> boardDialog = new ChoiceDialog<>(boards.get(0), boards);
             boardDialog.setTitle("Board Selection");
