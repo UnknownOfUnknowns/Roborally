@@ -81,7 +81,7 @@ public class PlayerView extends Tab implements ViewObserver {
         this.player = player;
 
         programLabel = new Label("Program");
-        checkPoint=new Label("checkpoints reached: " + player.getCheckpointsReached());
+        checkPoint=new Label("Checkpoints reached: " + player.getCheckpointsReached());
 
         programPane = new GridPane();
         programPane.setVgap(2.0);
@@ -147,6 +147,7 @@ public class PlayerView extends Tab implements ViewObserver {
     @Override
     public void updateView(Subject subject) {
         if (subject == player.board) {
+            checkPoint.setText("Checkpoints reached: " + player.getCheckpointsReached());
             for (int i = 0; i < Player.NO_REGISTERS; i++) {
                 CardFieldView cardFieldView = programCardViews[i];
                 if (cardFieldView != null) {
